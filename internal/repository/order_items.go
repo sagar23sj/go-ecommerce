@@ -11,6 +11,8 @@ type orderItemStore struct {
 }
 
 type OrderItemStorer interface {
+	RepositoryTransaction
+
 	GetOrderItemsByOrderID(ctx context.Context, tx *gorm.DB, orderID int64) ([]OrderItem, error)
 	StoreOrderItems(ctx context.Context, tx *gorm.DB, orderItems []OrderItem) error
 }

@@ -11,6 +11,8 @@ type productStore struct {
 }
 
 type ProductStorer interface {
+	RepositoryTransaction
+
 	GetProductByID(ctx context.Context, tx *gorm.DB, productID int64) (Product, error)
 	ListProducts(ctx context.Context, tx *gorm.DB) ([]Product, error)
 	UpdateProductQuantity(ctx context.Context, tx *gorm.DB, productID int64, quantity int64) error

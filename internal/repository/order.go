@@ -11,9 +11,12 @@ type orderStore struct {
 }
 
 type OrderStorer interface {
+	RepositoryTransaction
+
 	GetOrderByID(ctx context.Context, tx *gorm.DB, orderID int64) (Order, error)
 	CreateOrder(ctx context.Context, tx *gorm.DB, order Order) (Order, error)
 	UpdateOrderStatus(ctx context.Context, tx *gorm.DB, orderID int64, status string) error
+	ListOrders(ctx context.Context, tx *gorm.DB) ([]Order, error)
 }
 
 func NewOrderRepo(db *gorm.DB) OrderStorer {
@@ -60,4 +63,16 @@ func (os *orderStore) UpdateOrderStatus(ctx context.Context, tx *gorm.DB, orderI
 	}
 
 	return nil
+}
+
+func (os *orderStore) ListOrders(ctx context.Context, tx *gorm.DB) ([]Order, error) {
+	orderList := make([]Order, 0)
+
+	queryExecutor := os.initiateQueryExecutor(tx)
+	err := queryExecutor.Find(&orderList).Error
+	if err != nil {
+		return orderList, err
+	}
+
+	return orderList, nil
 }

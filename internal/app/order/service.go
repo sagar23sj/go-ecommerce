@@ -30,7 +30,6 @@ func NewService(orderRepo repository.OrderStorer, orderItemsRepo repository.Orde
 }
 
 func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrderRequest) (dto.Order, error) {
-
 	return dto.Order{}, nil
 }
 
