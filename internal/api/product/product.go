@@ -33,7 +33,8 @@ func GetProductHandler(productSvc product.Service) func(w http.ResponseWriter, r
 				zap.Error(err),
 			)
 
-			middleware.ErrorResponse(ctx, w, http.StatusInternalServerError, apperrors.ErrInternalServerError)
+			statusCode, errResponse := apperrors.MapError(err)
+			middleware.ErrorResponse(ctx, w, statusCode, errResponse)
 			return
 		}
 

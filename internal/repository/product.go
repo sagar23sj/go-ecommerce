@@ -34,7 +34,7 @@ func (ps *productStore) GetProductByID(ctx context.Context, tx *gorm.DB, product
 
 	queryExecutor := ps.initiateQueryExecutor(tx)
 	err := queryExecutor.First(&product, productID).Error
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return Product{}, err
 	}
 

@@ -3,6 +3,7 @@ package product
 import (
 	"context"
 
+	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 )
 
@@ -25,6 +26,10 @@ func (ps *service) GetProductByID(ctx context.Context, productID int64) (Product
 	productInfoDB, err := ps.productRepo.GetProductByID(ctx, nil, productID)
 	if err != nil {
 		return Product{}, nil
+	}
+
+	if productInfoDB.ID == 0 {
+		return Product{}, apperrors.ProductNotFound{ID: productID}
 	}
 
 	productInfo := MapRepoObjectToService(productInfoDB)
