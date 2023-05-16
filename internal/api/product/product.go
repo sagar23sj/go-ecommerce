@@ -1,0 +1,62 @@
+package api
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/sagar23sj/go-ecommerce/internal/app/product"
+	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
+	"github.com/sagar23sj/go-ecommerce/internal/pkg/logger"
+	"github.com/sagar23sj/go-ecommerce/internal/pkg/middleware"
+	"go.uber.org/zap"
+)
+
+func GetProductHandler(productSvc product.Service) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		rawProductID := chi.URLParam(r, "id")
+		productID, err := strconv.Atoi(rawProductID)
+		if err != nil {
+			logger.Errorw(ctx, "error occured while converting productID to an integer",
+				zap.Error(err),
+				zap.String("id", rawProductID),
+			)
+
+			middleware.ErrorResponse(ctx, w, http.StatusInternalServerError, apperrors.ErrInvalidRequestParam)
+			return
+		}
+
+		response, err := productSvc.GetProductByID(ctx, int64(productID))
+		if err != nil {
+			logger.Errorw(ctx, "error occured while fetching product info",
+				zap.Error(err),
+			)
+
+			middleware.ErrorResponse(ctx, w, http.StatusInternalServerError, apperrors.ErrInternalServerError)
+			return
+		}
+
+		middleware.SuccessResponse(ctx, w, http.StatusOK, MapProductDtoToResponse(response))
+		return
+
+	}
+}
+
+func ListProductHandler(productSvc product.Service) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		response, err := productSvc.ListProducts(ctx)
+		if err != nil {
+			logger.Errorw(ctx, "error occured while fetching product list",
+				zap.Error(err),
+			)
+
+			middleware.ErrorResponse(ctx, w, http.StatusInternalServerError, apperrors.ErrInternalServerError)
+			return
+		}
+
+		middleware.SuccessResponse(ctx, w, http.StatusOK, MapProductListToResponse(response))
+		return
+	}
+}
