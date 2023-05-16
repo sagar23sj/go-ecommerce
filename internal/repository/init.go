@@ -15,7 +15,7 @@ func InitializeDatabase() (db *gorm.DB, err error) {
 	}
 
 	//migrate database tables
-	db.AutoMigrate(&Order{}, &Product{}, &OrderDetails{})
+	db.AutoMigrate(&Order{}, &Product{}, &OrderItem{})
 
 	//seed products in database
 	err = seedDatabase(db)

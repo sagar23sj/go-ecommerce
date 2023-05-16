@@ -1,28 +1,12 @@
 package product
 
 import (
-	"time"
-
+	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 )
 
-type Product struct {
-	ID        int64
-	Name      string
-	Price     float64
-	Category  string
-	Quantity  int64
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
-type ProductList struct {
-	Products     []Product
-	ProductCount int64
-}
-
-func MapRepoObjectToService(repoObj repository.Product) Product {
-	return Product{
+func MapRepoObjectToDto(repoObj repository.Product) dto.Product {
+	return dto.Product{
 		ID:        int64(repoObj.ID),
 		Name:      repoObj.Name,
 		Price:     repoObj.Price,
@@ -33,7 +17,7 @@ func MapRepoObjectToService(repoObj repository.Product) Product {
 	}
 }
 
-func MapServiceObjectToRepo(product Product) repository.Product {
+func MapDtoObjectToRepo(product dto.Product) repository.Product {
 	return repository.Product{
 		Name:     product.Name,
 		Price:    product.Price,

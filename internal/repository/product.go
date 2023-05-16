@@ -13,6 +13,7 @@ type productStore struct {
 type ProductStorer interface {
 	GetProductByID(ctx context.Context, tx *gorm.DB, productID int64) (Product, error)
 	ListProducts(ctx context.Context, tx *gorm.DB) ([]Product, error)
+	UpdateProductQuantity(ctx context.Context, tx *gorm.DB, productID int64, quantity int64) error
 }
 
 type Product struct {
@@ -51,4 +52,14 @@ func (ps *productStore) ListProducts(ctx context.Context, tx *gorm.DB) ([]Produc
 	}
 
 	return productList, nil
+}
+
+func (ps *productStore) UpdateProductQuantity(ctx context.Context, tx *gorm.DB, productID int64, quantity int64) error {
+	queryExecutor := ps.initiateQueryExecutor(tx)
+	err := queryExecutor.Model(&Product{}).Where("id = ?", productID).Update("quantity", quantity).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

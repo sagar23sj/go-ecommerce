@@ -1,15 +1,6 @@
-package api
+package dto
 
 import "time"
-
-type CreateOrderRequest struct {
-	Products []ProductInfo `json:"products"`
-}
-
-type ProductInfo struct {
-	ProductID int64 `json:"product_id"`
-	Quantity  int64 `json:"quantity"`
-}
 
 type Order struct {
 	ID                 int64         `json:"id"`
@@ -20,6 +11,15 @@ type Order struct {
 	Status             string        `json:"status"`
 	CreatedAt          time.Time     `json:"created_at"`
 	UpdatedAt          time.Time     `json:"updated_at"`
+}
+
+type ProductInfo struct {
+	ProductID int64 `json:"product_id"`
+	Quantity  int64 `json:"quantity"`
+}
+
+type CreateOrderRequest struct {
+	Products []ProductInfo `json:"products"`
 }
 
 type UpdateOrderStatusRequest struct {

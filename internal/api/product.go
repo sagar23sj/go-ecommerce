@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func GetProductHandler(productSvc product.Service) func(w http.ResponseWriter, r *http.Request) {
+func getProductHandler(productSvc product.Service) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		rawProductID := chi.URLParam(r, "id")
@@ -38,13 +38,13 @@ func GetProductHandler(productSvc product.Service) func(w http.ResponseWriter, r
 			return
 		}
 
-		middleware.SuccessResponse(ctx, w, http.StatusOK, MapProductDtoToResponse(response))
+		middleware.SuccessResponse(ctx, w, http.StatusOK, response)
 		return
 
 	}
 }
 
-func ListProductHandler(productSvc product.Service) func(w http.ResponseWriter, r *http.Request) {
+func listProductHandler(productSvc product.Service) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		response, err := productSvc.ListProducts(ctx)
@@ -57,7 +57,7 @@ func ListProductHandler(productSvc product.Service) func(w http.ResponseWriter, 
 			return
 		}
 
-		middleware.SuccessResponse(ctx, w, http.StatusOK, MapProductListToResponse(response))
+		middleware.SuccessResponse(ctx, w, http.StatusOK, response)
 		return
 	}
 }

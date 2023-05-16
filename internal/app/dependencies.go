@@ -15,10 +15,11 @@ type Dependencies struct {
 func NewServices(db *gorm.DB) Dependencies {
 	//initialize repo dependencies
 	orderRepo := repository.NewOrderRepo(db)
+	orderItemsRepo := repository.NewOrderItemRepo(db)
 	productRepo := repository.NewProductRepo(db)
 
 	//initialize service dependencies
-	orderService := order.NewService(orderRepo)
+	orderService := order.NewService(orderRepo, orderItemsRepo, productRepo)
 	productService := product.NewService(productRepo)
 
 	return Dependencies{
