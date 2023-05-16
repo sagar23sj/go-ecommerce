@@ -28,7 +28,7 @@ func NewOrderRepo(db *gorm.DB) OrderStorer {
 type Order struct {
 	gorm.Model
 	Amount             float64
-	DiscountPercentage int64
+	DiscountPercentage float64
 	DiscountedAmount   float64
 	Status             string
 }

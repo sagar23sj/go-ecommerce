@@ -28,8 +28,6 @@ type OrderItem struct {
 	OrderID   int64
 	ProductID int64
 	Quantity  int64
-	Category  string
-	Price     float64
 }
 
 func (ods *orderItemStore) GetOrderItemsByOrderID(ctx context.Context, tx *gorm.DB, orderID int64) ([]OrderItem, error) {
@@ -37,7 +35,7 @@ func (ods *orderItemStore) GetOrderItemsByOrderID(ctx context.Context, tx *gorm.
 
 	queryExecutor := ods.initiateQueryExecutor(tx)
 	err := queryExecutor.Find(&orderItemList).Error
-	if err != nil {
+	if err != nil && err != gorm.ErrRecordNotFound {
 		return orderItemList, err
 	}
 

@@ -5,6 +5,25 @@ import (
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 )
 
+type ProductType string
+
+const (
+	PremiumProduct ProductType = "premium"
+	RegularProduct ProductType = "regular"
+	BudgetProduct  ProductType = "budget"
+)
+
+const (
+	MaxProductQuantity         = 10
+	PremiumProductsForDiscount = 3
+)
+
+var ProductTypeMap = map[ProductType]struct{}{
+	PremiumProduct: {},
+	RegularProduct: {},
+	BudgetProduct:  {},
+}
+
 func MapRepoObjectToDto(repoObj repository.Product) dto.Product {
 	return dto.Product{
 		ID:        int64(repoObj.ID),
