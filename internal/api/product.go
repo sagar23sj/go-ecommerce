@@ -23,7 +23,7 @@ func getProductHandler(productSvc product.Service) func(w http.ResponseWriter, r
 				zap.String("id", rawProductID),
 			)
 
-			middleware.ErrorResponse(ctx, w, http.StatusInternalServerError, apperrors.ErrInvalidRequestParam)
+			middleware.ErrorResponse(ctx, w, http.StatusBadRequest, apperrors.ErrInvalidRequestParam)
 			return
 		}
 

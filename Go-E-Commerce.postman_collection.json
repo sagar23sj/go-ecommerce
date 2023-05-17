@@ -1,7 +1,7 @@
 {
 	"info": {
 		"_postman_id": "5c3a8250-381c-4372-a706-95e056436ec8",
-		"name": "Go E-Commerce",
+		"name": "Go-E-Commerce",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -158,12 +158,12 @@
 					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"product not found with id: 10\",\n    \"data\": null\n}"
 				},
 				{
-					"name": "Fail: Invalid path param",
+					"name": "Fail: invalid Path param",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/product/q",
+							"raw": "http://localhost:8080/product/w",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -171,12 +171,12 @@
 							"port": "8080",
 							"path": [
 								"product",
-								"q"
+								"w"
 							]
 						}
 					},
-					"status": "Internal Server Error",
-					"code": 500,
+					"status": "Bad Request",
+					"code": 400,
 					"_postman_previewlanguage": "json",
 					"header": [
 						{
@@ -185,7 +185,7 @@
 						},
 						{
 							"key": "Date",
-							"value": "Wed, 17 May 2023 11:30:15 GMT"
+							"value": "Wed, 17 May 2023 12:12:21 GMT"
 						},
 						{
 							"key": "Content-Length",
@@ -193,7 +193,7 @@
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"error_code\": 500,\n    \"error_message\": \"invalid request param\",\n    \"data\": null\n}"
+					"body": "{\n    \"error_code\": 400,\n    \"error_message\": \"invalid request param\",\n    \"data\": null\n}"
 				}
 			]
 		},

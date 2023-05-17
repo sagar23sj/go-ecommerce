@@ -57,4 +57,4 @@ make clean
 ## Postman Collection
 
 
-[here](Go_E-Commerce.postman_collection.json)
+[here](Go-E-Commerce.postman_collection.json)
