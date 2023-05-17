@@ -12,26 +12,29 @@ const (
 type OrderStatus int
 
 const (
-	OrderPlaced OrderStatus = iota
+	OrderCancelled OrderStatus = iota
+	OrderPlaced
 	OrderDispatched
 	OrderCompleted
-	OrderCancelled
+	OrderReturned
 )
 
 var MapOrderStatus = map[string]OrderStatus{
+	"Cancelled":  OrderCancelled,
 	"Placed":     OrderPlaced,
 	"Dispatched": OrderDispatched,
 	"Completed":  OrderCompleted,
-	"Cancelled":  OrderCancelled,
+	"Returned":   OrderReturned,
 }
 
 // Note -- the order of this slice needs to match
 // the order of the iota enum values defined above
 var ListOrderStatus = []string{
+	"Cancelled",
 	"Placed",
 	"Dispatched",
 	"Completed",
-	"Cancelled",
+	"Returned",
 }
 
 func MapOrderRepoToOrderDto(order repository.Order, orderItems []repository.OrderItem) dto.Order {
@@ -51,6 +54,7 @@ func MapOrderRepoToOrderDto(order repository.Order, orderItems []repository.Orde
 		DiscountPercentage: order.DiscountPercentage,
 		DiscountedAmount:   order.DiscountedAmount,
 		Status:             order.Status,
+		DispatchedAt:       order.DispatchedAt,
 		CreatedAt:          order.CreatedAt,
 		UpdatedAt:          order.UpdatedAt,
 	}

@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -16,6 +17,7 @@ type OrderStorer interface {
 	GetOrderByID(ctx context.Context, tx *gorm.DB, orderID int64) (Order, error)
 	CreateOrder(ctx context.Context, tx *gorm.DB, order Order) (Order, error)
 	UpdateOrderStatus(ctx context.Context, tx *gorm.DB, orderID int64, status string) error
+	UpdateOrderDispatchDate(ctx context.Context, tx *gorm.DB, orderID int64, dispatchedAt time.Time) error
 	ListOrders(ctx context.Context, tx *gorm.DB) ([]Order, error)
 }
 
@@ -31,6 +33,7 @@ type Order struct {
 	DiscountPercentage float64
 	DiscountedAmount   float64
 	Status             string
+	DispatchedAt       time.Time
 }
 
 func (os *orderStore) GetOrderByID(ctx context.Context, tx *gorm.DB, orderID int64) (Order, error) {
@@ -58,6 +61,16 @@ func (os *orderStore) CreateOrder(ctx context.Context, tx *gorm.DB, order Order)
 func (os *orderStore) UpdateOrderStatus(ctx context.Context, tx *gorm.DB, orderID int64, status string) error {
 	queryExecutor := os.initiateQueryExecutor(tx)
 	err := queryExecutor.Model(&Order{}).Where("id = ?", orderID).Update("status", status).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (os *orderStore) UpdateOrderDispatchDate(ctx context.Context, tx *gorm.DB, orderID int64, dispatchedAt time.Time) error {
+	queryExecutor := os.initiateQueryExecutor(tx)
+	err := queryExecutor.Model(&Order{}).Where("id = ?", orderID).Update("dispatched_at", dispatchedAt).Error
 	if err != nil {
 		return err
 	}

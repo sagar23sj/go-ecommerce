@@ -2,6 +2,8 @@ package order
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/sagar23sj/go-ecommerce/internal/app/product"
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
@@ -94,6 +96,7 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 		DiscountPercentage: orderDB.DiscountPercentage,
 		DiscountedAmount:   orderDB.DiscountedAmount,
 		Status:             orderDB.Status,
+		DispatchedAt:       orderDB.DispatchedAt,
 		CreatedAt:          orderDB.CreatedAt,
 		UpdatedAt:          orderDB.UpdatedAt,
 	}
@@ -131,6 +134,7 @@ func (os *service) GetOrderDetailsByID(ctx context.Context, orderID int64) (orde
 		DiscountPercentage: orderInfoDB.DiscountPercentage,
 		DiscountedAmount:   orderInfoDB.DiscountedAmount,
 		Status:             orderInfoDB.Status,
+		DispatchedAt:       orderInfoDB.DispatchedAt,
 		CreatedAt:          orderInfoDB.CreatedAt,
 		UpdatedAt:          orderInfoDB.UpdatedAt,
 	}
@@ -162,24 +166,53 @@ func (os *service) ListOrders(ctx context.Context) ([]dto.Order, error) {
 }
 
 func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status string) (order dto.Order, err error) {
-	if _, ok := MapOrderStatus[status]; !ok {
-		return dto.Order{}, apperrors.OrderStatusInvalid{ID: orderID}
-	}
-
-	orderInfo, err := os.orderRepo.GetOrderByID(ctx, nil, orderID)
+	//initializing database transaction
+	tx, err := os.orderRepo.BeginTx(ctx)
 	if err != nil {
 		return dto.Order{}, err
 	}
 
-	if orderInfo.ID == 0 {
-		return dto.Order{}, apperrors.OrderNotFound{ID: orderID}
-	}
+	defer func() {
+		txErr := os.orderRepo.HandleTransaction(ctx, tx, err)
+		if txErr != nil {
+			err = txErr
+			return
+		}
+	}()
 
-	if MapOrderStatus[orderInfo.Status] <= MapOrderStatus[status] {
+	if _, ok := MapOrderStatus[status]; !ok {
 		return dto.Order{}, apperrors.OrderStatusInvalid{ID: orderID}
 	}
 
-	return dto.Order{}, nil
+	orderInfoDB, err := os.orderRepo.GetOrderByID(ctx, nil, orderID)
+	if err != nil {
+		return dto.Order{}, err
+	}
+
+	if orderInfoDB.ID == 0 {
+		return dto.Order{}, apperrors.OrderNotFound{ID: orderID}
+	}
+
+	isUpdationValid := os.validateUpdateOrderStatusRequest(ctx, status, orderInfoDB.Status)
+	if !isUpdationValid {
+		return dto.Order{}, apperrors.OrderUpdationInvalid{
+			ID:             orderID,
+			CurrentState:   orderInfoDB.Status,
+			RequestedState: status,
+		}
+	}
+
+	err = os.orderRepo.UpdateOrderStatus(ctx, tx, orderID, status)
+	if err != nil {
+		return dto.Order{}, fmt.Errorf("error occured while updating order status: %w", err)
+	}
+
+	err = os.orderRepo.UpdateOrderDispatchDate(ctx, tx, orderID, time.Now())
+	if err != nil {
+		return dto.Order{}, fmt.Errorf("error occured while updating order dispatch date: %w", err)
+	}
+
+	return dto.Order{}, err
 }
 
 func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm.DB, requestedProducts []dto.ProductInfo) (
@@ -245,4 +278,31 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 	}
 
 	return orderInfo, productsUpdated, nil
+}
+
+func (os *service) validateUpdateOrderStatusRequest(ctx context.Context, RequestOrderStatus, DBOrderStatus string) (isUpdateValid bool) {
+	requestedOrderState := MapOrderStatus[RequestOrderStatus]
+	currentOrderState := MapOrderStatus[DBOrderStatus]
+
+	//donot update if requested and current state is same
+	if currentOrderState == requestedOrderState {
+		return false
+	}
+
+	//allow cancel only before order is completed
+	if requestedOrderState == OrderCancelled && requestedOrderState < OrderCompleted {
+		return true
+	}
+
+	//order state update should not go backwards unless it is cancel reqeust
+	if requestedOrderState < currentOrderState {
+		return false
+	}
+
+	//order status update can only go one step forward
+	if requestedOrderState != (currentOrderState + 1) {
+		return false
+	}
+
+	return true
 }

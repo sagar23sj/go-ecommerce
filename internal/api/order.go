@@ -42,7 +42,7 @@ func createOrderHandler(orderSvc order.Service) func(w http.ResponseWriter, r *h
 	}
 }
 
-func getOrderHandler(orderSvc order.Service) func(w http.ResponseWriter, r *http.Request) {
+func getOrderDetailsHandler(orderSvc order.Service) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ctx := r.Context()
 		rawOrderID := chi.URLParam(r, "id")
@@ -98,5 +98,23 @@ func updateOrderStatusHandler(orderSvc order.Service) func(w http.ResponseWriter
 		}
 
 		middleware.SuccessResponse(ctx, w, http.StatusCreated, orderInfo)
+	}
+}
+
+func listOrdersHandler(orderSvc order.Service) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+		response, err := orderSvc.ListOrders(ctx)
+		if err != nil {
+			logger.Errorw(ctx, "error occured while fetching orders list",
+				zap.Error(err),
+			)
+
+			middleware.ErrorResponse(ctx, w, http.StatusInternalServerError, apperrors.ErrInternalServerError)
+			return
+		}
+
+		middleware.SuccessResponse(ctx, w, http.StatusOK, response)
+		return
 	}
 }

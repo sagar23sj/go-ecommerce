@@ -14,7 +14,8 @@ func NewRouter(deps app.Dependencies) chi.Router {
 		r.Use(middleware.Logger)
 
 		r.Post("/order", createOrderHandler(deps.OrderService))
-		r.Get("/order/{id}", getOrderHandler(deps.OrderService))
+		r.Get("/orders", listOrdersHandler(deps.OrderService))
+		r.Get("/order/{id}", getOrderDetailsHandler(deps.OrderService))
 		r.Patch("/order/{id}/status", updateOrderStatusHandler(deps.OrderService))
 
 	})
