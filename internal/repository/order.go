@@ -29,6 +29,7 @@ func NewOrderRepo(db *gorm.DB) OrderStorer {
 
 type Order struct {
 	gorm.Model
+	ID                 uint `gorm:"primary_key"`
 	Amount             float64
 	DiscountPercentage float64
 	FinalAmount        float64

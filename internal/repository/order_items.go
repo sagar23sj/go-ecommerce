@@ -25,6 +25,7 @@ func NewOrderItemRepo(db *gorm.DB) OrderItemStorer {
 
 type OrderItem struct {
 	gorm.Model
+	ID        uint `gorm:"primary_key"`
 	OrderID   int64
 	ProductID int64
 	Quantity  int64

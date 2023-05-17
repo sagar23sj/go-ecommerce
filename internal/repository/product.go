@@ -20,6 +20,7 @@ type ProductStorer interface {
 
 type Product struct {
 	gorm.Model
+	ID       uint `gorm:"primary_key"`
 	Name     string
 	Price    float64
 	Category string

@@ -54,7 +54,7 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 		return dto.Order{}, err
 	}
 
-	//Set Order Status to Default Placed
+	//Set Order Status to Placed
 	orderRepoObj.Status = ListOrderStatus[OrderPlaced]
 
 	//1. Inserting Order in Database
@@ -167,6 +167,7 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 		}
 	}
 
+	//update order status in db
 	err = os.orderRepo.UpdateOrderStatus(ctx, tx, orderID, status)
 	if err != nil {
 		return dto.Order{}, fmt.Errorf("error occured while updating order status: %w", err)
@@ -198,7 +199,7 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 
 	}
 
-	//update dispatch date only when order is dispatched
+	//update dispatch date only when order_status = Dispatched
 	if MapOrderStatus[status] == OrderDispatched {
 		orderDispatchedAt := time.Now()
 		err = os.orderRepo.UpdateOrderDispatchDate(ctx, tx, orderID, orderDispatchedAt)
