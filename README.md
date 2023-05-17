@@ -58,3 +58,51 @@ make clean
 
 
 [here](Go-E-Commerce.postman_collection.json)
+
+
+## Project Structure
+
+```
+.
+├── Go-E-Commerce.postman_collection.json
+├── Makefile
+├── README.md
+├── cmd  #Application Entrypoint
+│   └── main.go
+├── go.mod
+├── go.sum
+└── internal   #Application Code
+    ├── api    #Handlers & Router
+    │   ├── order.go
+    │   ├── product.go
+    │   └── router.go
+    ├── app   #Business Layer
+    │   ├── dependencies.go
+    │   ├── order
+    │   │   ├── domain.go
+    │   │   └── service.go
+    │   └── product
+    │       ├── domain.go
+    │       └── service.go
+    ├── pkg  #Packages shared by application code
+    │   ├── apperrors
+    │   │   ├── errors.go
+    │   │   ├── map_errors.go
+    │   │   ├── order.go
+    │   │   └── product.go
+    │   ├── constants
+    │   │   └── app.go
+    │   ├── dto
+    │   │   ├── order.go
+    │   │   └── product.go
+    │   ├── logger
+    │   │   └── logger.go
+    │   └── middleware
+    │       └── response_writer.go
+    └── repository  #Database Layer
+        ├── init.go
+        ├── order.go
+        ├── order_items.go
+        ├── product.go
+        └── repo.go
+```
