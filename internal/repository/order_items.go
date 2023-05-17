@@ -34,7 +34,7 @@ func (ods *orderItemStore) GetOrderItemsByOrderID(ctx context.Context, tx *gorm.
 	orderItemList := make([]OrderItem, 0)
 
 	queryExecutor := ods.initiateQueryExecutor(tx)
-	err := queryExecutor.Where("order_id == ?", orderID).Find(&orderItemList).Error
+	err := queryExecutor.Where("order_id = ?", orderID).Find(&orderItemList).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return orderItemList, err
 	}
