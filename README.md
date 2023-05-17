@@ -53,3 +53,8 @@ make clean
 4. <b>Get Order Details API</b> : `GET http://localhost:8080/order/2`
 5. <b>List Orders API</b> : `GET http://localhost:8080/orders`
 6. <b>Updare Order Status API</b> : `PATCH http://localhost:8080/order/5/status`
+
+## Postman Collection
+
+
+[here](Go_E-Commerce.postman_collection.json)
