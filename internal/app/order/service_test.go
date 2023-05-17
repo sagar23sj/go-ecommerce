@@ -5,10 +5,10 @@ import (
 	"testing"
 
 	productMock "github.com/sagar23sj/go-ecommerce/internal/app/product/mocks"
+	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 	"github.com/sagar23sj/go-ecommerce/internal/repository/mocks"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 	"gorm.io/gorm"
@@ -27,7 +27,7 @@ func TestOrderServiceTestSuite(t *testing.T) {
 }
 
 // this function executes before the test suite begins execution
-func (suite *OrderServiceTestSuite) SetupSuite() {
+func (suite *OrderServiceTestSuite) SetupTest() {
 	suite.orderRepo = &mocks.OrderStorer{}
 	suite.orderItemRepo = &mocks.OrderItemStorer{}
 	suite.productService = &productMock.Service{}
@@ -43,7 +43,6 @@ func (suite *OrderServiceTestSuite) TearDownTest() {
 }
 
 func (suite *OrderServiceTestSuite) TestCreateOrder() {
-	t := suite.T()
 	type testCaseStruct struct {
 		name           string
 		input          dto.CreateOrderRequest
@@ -52,15 +51,14 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 		expectedErr    error
 	}
 
-	// timeNow := time.Now()
 	testCases := []testCaseStruct{
 		{
-			name: "Order Creation Success",
+			name: "Success",
 			input: dto.CreateOrderRequest{
 				Products: []dto.ProductInfo{
 					{
-						ProductID: 1,
-						Quantity:  2,
+						ProductID: int64(1),
+						Quantity:  int64(2),
 					},
 				},
 			},
@@ -104,17 +102,77 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 			},
 			expectedErr: nil,
 		},
+		{
+			name: "Fail Product Limit Exceeded",
+			input: dto.CreateOrderRequest{
+				Products: []dto.ProductInfo{
+					{
+						ProductID: int64(1),
+						Quantity:  int64(12),
+					},
+				},
+			},
+			setup: func() {
+				tx := &gorm.DB{}
+				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
+				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
+					ID:       int64(1),
+					Name:     "xyz",
+					Price:    10.0,
+					Category: "Premium",
+					Quantity: int64(20),
+				}, nil)
+			},
+			expectedOutput: dto.Order{},
+			expectedErr: apperrors.ProductQuantityExceeded{
+				ID:            1,
+				QuantityLimit: 10,
+				QuantityAsked: 12,
+			},
+		},
+		{
+			name: "Fail Product Quantity Insufficient",
+			input: dto.CreateOrderRequest{
+				Products: []dto.ProductInfo{
+					{
+						ProductID: int64(1),
+						Quantity:  int64(12),
+					},
+				},
+			},
+			setup: func() {
+				tx := &gorm.DB{}
+				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
+				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
+					ID:       int64(1),
+					Name:     "xyz",
+					Price:    10.0,
+					Category: "Premium",
+					Quantity: int64(10),
+				}, nil)
+			},
+			expectedOutput: dto.Order{},
+			expectedErr: apperrors.ProductQuantityInsufficient{
+				ID:                1,
+				QuantityRemaining: 10,
+				QuantityAsked:     12,
+			},
+		},
 	}
 
 	for _, test := range testCases {
+		suite.SetupTest()
 		suite.Run(test.name, func() {
 			test.setup()
 
 			_, err := suite.service.CreateOrder(context.Background(), dto.CreateOrderRequest{
-				Products: []dto.ProductInfo{{ProductID: int64(1), Quantity: int64(2)}},
+				Products: []dto.ProductInfo{{ProductID: test.input.Products[0].ProductID, Quantity: test.input.Products[0].Quantity}},
 			})
 
-			assert.Equal(t, test.expectedErr, err)
+			suite.Equal(test.expectedErr, err)
 		})
+		suite.TearDownTest()
 	}
 }
