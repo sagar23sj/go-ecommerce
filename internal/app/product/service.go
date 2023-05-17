@@ -6,6 +6,7 @@ import (
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
+	"gorm.io/gorm"
 )
 
 type service struct {
@@ -13,8 +14,9 @@ type service struct {
 }
 
 type Service interface {
-	GetProductByID(ctx context.Context, productID int64) (dto.Product, error)
+	GetProductByID(ctx context.Context, tx *gorm.DB, productID int64) (dto.Product, error)
 	ListProducts(ctx context.Context) ([]dto.Product, error)
+	UpdateProductQuantity(ctx context.Context, tx *gorm.DB, productsQuantityMap map[int64]int64) error
 }
 
 func NewService(productRepo repository.ProductStorer) Service {
@@ -23,8 +25,8 @@ func NewService(productRepo repository.ProductStorer) Service {
 	}
 }
 
-func (ps *service) GetProductByID(ctx context.Context, productID int64) (dto.Product, error) {
-	productInfoDB, err := ps.productRepo.GetProductByID(ctx, nil, productID)
+func (ps *service) GetProductByID(ctx context.Context, tx *gorm.DB, productID int64) (dto.Product, error) {
+	productInfoDB, err := ps.productRepo.GetProductByID(ctx, tx, productID)
 	if err != nil {
 		return dto.Product{}, nil
 	}
@@ -50,4 +52,9 @@ func (ps *service) ListProducts(ctx context.Context) ([]dto.Product, error) {
 	}
 
 	return products, nil
+}
+
+func (ps *service) UpdateProductQuantity(ctx context.Context, tx *gorm.DB, productsQuantityMap map[int64]int64) error {
+	err := ps.productRepo.UpdateProductQuantity(ctx, tx, productsQuantityMap)
+	return err
 }

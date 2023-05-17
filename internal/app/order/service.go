@@ -15,7 +15,7 @@ import (
 type service struct {
 	orderRepo      repository.OrderStorer
 	orderItemsRepo repository.OrderItemStorer
-	productRepo    repository.ProductStorer
+	productSvc     product.Service
 }
 
 type Service interface {
@@ -26,11 +26,11 @@ type Service interface {
 }
 
 func NewService(orderRepo repository.OrderStorer, orderItemsRepo repository.OrderItemStorer,
-	productRepo repository.ProductStorer) Service {
+	productSvc product.Service) Service {
 	return &service{
 		orderRepo:      orderRepo,
 		orderItemsRepo: orderItemsRepo,
-		productRepo:    productRepo,
+		productSvc:     productSvc,
 	}
 }
 
@@ -84,7 +84,7 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 		productQuantityMap[p.ProductID] = p.Quantity
 	}
 
-	err = os.productRepo.UpdateProductQuantity(ctx, tx, productQuantityMap)
+	err = os.productSvc.UpdateProductQuantity(ctx, tx, productQuantityMap)
 	if err != nil {
 		return dto.Order{}, err
 	}
@@ -172,6 +172,32 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 		return dto.Order{}, fmt.Errorf("error occured while updating order status: %w", err)
 	}
 
+	//update product quantity if order cancelled or returned
+	if (MapOrderStatus[status] == OrderCancelled) || (MapOrderStatus[status] == OrderReturned) {
+
+		orderItemsDB, err := os.orderItemsRepo.GetOrderItemsByOrderID(ctx, tx, orderID)
+		if err != nil {
+			return dto.Order{}, fmt.Errorf("error occured while fetching order items: %w", err)
+		}
+
+		productQuantityMap := make(map[int64]int64)
+		for _, item := range orderItemsDB {
+
+			product, err := os.productSvc.GetProductByID(ctx, tx, item.ProductID)
+			if err != nil {
+				return dto.Order{}, fmt.Errorf("error occured while fetching product with id %d,  %w", item.ProductID, err)
+			}
+
+			productQuantityMap[item.ProductID] = product.Quantity + item.Quantity
+		}
+
+		err = os.productSvc.UpdateProductQuantity(ctx, tx, productQuantityMap)
+		if err != nil {
+			return dto.Order{}, fmt.Errorf("error occured while updating product quantiry,  %w", err)
+		}
+
+	}
+
 	//update dispatch date only when order is dispatched
 	if MapOrderStatus[status] == OrderDispatched {
 		orderDispatchedAt := time.Now()
@@ -201,14 +227,9 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 	var finalOrderAmount float64
 
 	for _, p := range requestedProducts {
-		productInfo, err := os.productRepo.GetProductByID(ctx, tx, p.ProductID)
+		productInfo, err := os.productSvc.GetProductByID(ctx, tx, p.ProductID)
 		if err != nil {
 			return repository.Order{}, productsUpdated, err
-		}
-
-		//product not found, return error apperrors.ProductNotFound
-		if productInfo.ID == 0 {
-			return repository.Order{}, productsUpdated, apperrors.ProductNotFound{ID: int64(p.ProductID)}
 		}
 
 		//product quantity insufficient, return error apperrors.ProductQuantityInsufficient

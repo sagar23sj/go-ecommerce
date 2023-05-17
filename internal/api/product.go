@@ -27,7 +27,7 @@ func getProductHandler(productSvc product.Service) func(w http.ResponseWriter, r
 			return
 		}
 
-		response, err := productSvc.GetProductByID(ctx, int64(productID))
+		response, err := productSvc.GetProductByID(ctx, nil, int64(productID))
 		if err != nil {
 			logger.Errorw(ctx, "error occured while fetching product info",
 				zap.Error(err),

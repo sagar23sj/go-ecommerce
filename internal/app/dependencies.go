@@ -19,8 +19,8 @@ func NewServices(db *gorm.DB) Dependencies {
 	productRepo := repository.NewProductRepo(db)
 
 	//initialize service dependencies
-	orderService := order.NewService(orderRepo, orderItemsRepo, productRepo)
 	productService := product.NewService(productRepo)
+	orderService := order.NewService(orderRepo, orderItemsRepo, productService)
 
 	return Dependencies{
 		OrderService:   orderService,
