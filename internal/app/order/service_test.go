@@ -3,6 +3,7 @@ package order
 import (
 	"context"
 	"testing"
+	"time"
 
 	productMock "github.com/sagar23sj/go-ecommerce/internal/app/product/mocks"
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
@@ -103,7 +104,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 			expectedErr: nil,
 		},
 		{
-			name: "Fail Product Limit Exceeded",
+			name: "Failed Because Product Limit Exceeded",
 			input: dto.CreateOrderRequest{
 				Products: []dto.ProductInfo{
 					{
@@ -132,7 +133,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 			},
 		},
 		{
-			name: "Fail Product Quantity Insufficient",
+			name: "Fail Because Product Quantity Insufficient",
 			input: dto.CreateOrderRequest{
 				Products: []dto.ProductInfo{
 					{
@@ -170,6 +171,125 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 			_, err := suite.service.CreateOrder(context.Background(), dto.CreateOrderRequest{
 				Products: []dto.ProductInfo{{ProductID: test.input.Products[0].ProductID, Quantity: test.input.Products[0].Quantity}},
 			})
+
+			suite.Equal(test.expectedErr, err)
+		})
+		suite.TearDownTest()
+	}
+}
+
+func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
+	type testCaseStruct struct {
+		name           string
+		input          dto.UpdateOrderStatusRequest
+		setup          func()
+		expectedOutput dto.Order
+		expectedErr    error
+	}
+
+	now = func() time.Time { return time.Date(2023, 05, 18, 00, 00, 00, 00, time.UTC) }
+	timeNow := now()
+	testCases := []testCaseStruct{
+		{
+			name: "Success",
+			input: dto.UpdateOrderStatusRequest{
+				OrderID: 1,
+				Status:  "Dispatched",
+			},
+			setup: func() {
+				tx := &gorm.DB{}
+				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
+				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Placed",
+				}, nil)
+				suite.orderRepo.On("UpdateOrderStatus", mock.Anything, mock.Anything, int64(1), "Dispatched").Return(nil)
+				suite.orderRepo.On("UpdateOrderDispatchDate", mock.Anything, mock.Anything, int64(1), timeNow).Return(nil)
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Dispatched",
+					DispatchedAt:       timeNow,
+				}, nil)
+			},
+			expectedOutput: dto.Order{
+				ID:                 int64(1),
+				Products:           []dto.ProductInfo{},
+				Amount:             20.0,
+				DiscountPercentage: 0.0,
+				FinalAmount:        20.0,
+				Status:             "Dispatched",
+			},
+			expectedErr: nil,
+		},
+		{
+			name: "Failed Because Order Status Invalid ",
+			input: dto.UpdateOrderStatusRequest{
+				OrderID: int64(1),
+				Status:  "test",
+			},
+			setup: func() {
+				tx := &gorm.DB{}
+				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
+				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
+			},
+			expectedOutput: dto.Order{},
+			expectedErr:    apperrors.OrderStatusInvalid{ID: int64(1)},
+		},
+		{
+			name: "Failed Because Order Updation Invalid ",
+			input: dto.UpdateOrderStatusRequest{
+				OrderID: int64(1),
+				Status:  "Completed",
+			},
+			setup: func() {
+				tx := &gorm.DB{}
+				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
+				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Placed",
+				}, nil)
+			},
+			expectedOutput: dto.Order{},
+			expectedErr: apperrors.OrderUpdationInvalid{
+				ID:             int64(1),
+				CurrentState:   "Placed",
+				RequestedState: "Completed",
+			},
+		},
+		{
+			name: "Failed Because Order Not Found ",
+			input: dto.UpdateOrderStatusRequest{
+				OrderID: int64(1),
+				Status:  "Completed",
+			},
+			setup: func() {
+				tx := &gorm.DB{}
+				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
+				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{}, nil)
+			},
+			expectedOutput: dto.Order{},
+			expectedErr:    apperrors.OrderNotFound{ID: int64(1)},
+		},
+	}
+
+	for _, test := range testCases {
+		suite.SetupTest()
+		suite.Run(test.name, func() {
+			test.setup()
+
+			_, err := suite.service.UpdateOrderStatus(context.Background(), test.input.OrderID, test.input.Status)
 
 			suite.Equal(test.expectedErr, err)
 		})

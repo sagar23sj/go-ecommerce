@@ -12,6 +12,8 @@ import (
 	"gorm.io/gorm"
 )
 
+var now = time.Now
+
 type service struct {
 	orderRepo      repository.OrderStorer
 	orderItemsRepo repository.OrderItemStorer
@@ -201,7 +203,7 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 
 	//update dispatch date only when order_status = Dispatched
 	if MapOrderStatus[status] == OrderDispatched {
-		orderDispatchedAt := time.Now()
+		orderDispatchedAt := now()
 		err = os.orderRepo.UpdateOrderDispatchDate(ctx, tx, orderID, orderDispatchedAt)
 		if err != nil {
 			return dto.Order{}, fmt.Errorf("error occured while updating order dispatch date: %w", err)
