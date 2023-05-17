@@ -37,8 +37,12 @@ There are 9 products already seeded into database and whatever updations you mak
 make run
 ```
 
+2. Run following command to run unit test cases
+```bash
+make test
+```
 
-2. Run following command to erase database to start fresh
+3. Run following command to erase database to start fresh
 ```bash
 make clean 
 ```

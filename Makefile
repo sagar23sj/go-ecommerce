@@ -3,3 +3,6 @@ run: ## Run e-commerce poject on host machine
 
 clean: ## Clean database file for a fresh start
 	rm test.db
+
+test: ## Run all unit tests in the project
+	go test -v ./...
