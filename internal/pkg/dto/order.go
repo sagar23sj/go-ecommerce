@@ -17,8 +17,8 @@ type Order struct {
 }
 
 type ProductInfo struct {
-	ProductID int64 `json:"product_id"`
-	Quantity  int64 `json:"quantity"`
+	ProductID int64 `json:"product_id,omitempty"`
+	Quantity  int64 `json:"quantity,omitempty"`
 }
 
 type CreateOrderRequest struct {
@@ -26,7 +26,8 @@ type CreateOrderRequest struct {
 }
 
 type UpdateOrderStatusRequest struct {
-	Status string `json:"status"`
+	OrderID int64  `json:"order_id"`
+	Status  string `json:"status"`
 }
 
 func (req *CreateOrderRequest) Validate() error {

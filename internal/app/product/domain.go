@@ -8,9 +8,9 @@ import (
 type ProductType string
 
 const (
-	PremiumProduct ProductType = "premium"
-	RegularProduct ProductType = "regular"
-	BudgetProduct  ProductType = "budget"
+	PremiumProduct ProductType = "Premium"
+	RegularProduct ProductType = "Regular"
+	BudgetProduct  ProductType = "Budget"
 )
 
 const (

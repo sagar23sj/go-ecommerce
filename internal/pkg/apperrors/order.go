@@ -15,5 +15,5 @@ type OrderStatusInvalid struct {
 }
 
 func (o OrderStatusInvalid) Error() string {
-	return fmt.Sprintf("invalid status for order with: %d", o.ID)
+	return fmt.Sprintf("invalid status for order with id: %d", o.ID)
 }

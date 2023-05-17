@@ -4,7 +4,7 @@ import "net/http"
 
 func MapError(err error) (statusCode int, errResponse error) {
 	if _, ok := err.(ProductNotFound); ok {
-		return http.StatusUnprocessableEntity, err
+		return http.StatusBadRequest, err
 	}
 
 	if _, ok := err.(ProductQuantityInsufficient); ok {
@@ -19,5 +19,9 @@ func MapError(err error) (statusCode int, errResponse error) {
 		return http.StatusUnprocessableEntity, err
 	}
 
-	return
+	if _, ok := err.(OrderNotFound); ok {
+		return http.StatusBadRequest, err
+	}
+
+	return http.StatusInternalServerError, err
 }

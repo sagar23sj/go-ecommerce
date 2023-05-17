@@ -47,13 +47,13 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 		}
 	}()
 
-	orderAmount, discountPercent, discountedAmount, err := os.calculateOrderValueFromProducts(ctx, tx, orderDetails.Products)
-	orderRepoObj := repository.Order{
-		Amount:             orderAmount,
-		DiscountPercentage: discountPercent,
-		DiscountedAmount:   discountedAmount,
-		Status:             ListOrderStatus[OrderPlaced],
+	orderRepoObj, updatedProductInfo, err := os.calculateOrderValueFromProducts(ctx, tx, orderDetails.Products)
+	if err != nil {
+		return dto.Order{}, err
 	}
+
+	//Set Order Status to Default Placed
+	orderRepoObj.Status = ListOrderStatus[OrderPlaced]
 
 	//1. Inserting Order in Database
 	orderDB, err := os.orderRepo.CreateOrder(ctx, tx, orderRepoObj)
@@ -78,7 +78,7 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 
 	//3. Update Product quantity in database
 	productQuantityMap := make(map[int64]int64)
-	for _, p := range orderDetails.Products {
+	for _, p := range updatedProductInfo {
 		productQuantityMap[p.ProductID] = p.Quantity
 	}
 
@@ -88,14 +88,14 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 	}
 
 	order = dto.Order{
-		ID:                 order.ID,
+		ID:                 int64(orderDB.ID),
 		Products:           orderDetails.Products,
-		Amount:             order.Amount,
-		DiscountPercentage: order.DiscountPercentage,
-		DiscountedAmount:   order.DiscountedAmount,
-		Status:             order.Status,
-		CreatedAt:          order.CreatedAt,
-		UpdatedAt:          order.UpdatedAt,
+		Amount:             orderDB.Amount,
+		DiscountPercentage: orderDB.DiscountPercentage,
+		DiscountedAmount:   orderDB.DiscountedAmount,
+		Status:             orderDB.Status,
+		CreatedAt:          orderDB.CreatedAt,
+		UpdatedAt:          orderDB.UpdatedAt,
 	}
 
 	return order, nil
@@ -183,18 +183,27 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 }
 
 func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm.DB, requestedProducts []dto.ProductInfo) (
-	orderAmount float64, discountPercent float64, discountedOrderAmount float64, err error) {
+	orderInfo repository.Order, productsUpdated []dto.ProductInfo, err error) {
 
+	productsUpdated = make([]dto.ProductInfo, 0)
 	premiumProductCount := 0
+
+	var orderAmount float64
+	var discountPercent float64
+	var discountedOrderAmount float64
 
 	for _, p := range requestedProducts {
 		productInfo, err := os.productRepo.GetProductByID(ctx, tx, p.ProductID)
 		if err != nil {
-			return 0.0, 0.0, 0.0, err
+			return repository.Order{}, productsUpdated, err
+		}
+
+		if productInfo.ID == 0 {
+			return repository.Order{}, productsUpdated, apperrors.ProductNotFound{ID: int64(p.ProductID)}
 		}
 
 		if productInfo.Quantity < p.Quantity {
-			return 0.0, 0.0, 0.0, apperrors.ProductQuantityInsufficient{
+			return repository.Order{}, productsUpdated, apperrors.ProductQuantityInsufficient{
 				ID:                p.ProductID,
 				QuantityAsked:     p.Quantity,
 				QuantityRemaining: productInfo.Quantity,
@@ -202,7 +211,7 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 		}
 
 		if p.Quantity > product.MaxProductQuantity {
-			return 0.0, 0.0, 0.0, apperrors.ProductQuantityExceeded{
+			return repository.Order{}, productsUpdated, apperrors.ProductQuantityExceeded{
 				ID:            p.ProductID,
 				QuantityAsked: p.Quantity,
 				QuantityLimit: product.MaxProductQuantity,
@@ -215,6 +224,12 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 		if productInfo.Category == string(product.PremiumProduct) {
 			premiumProductCount = premiumProductCount + 1
 		}
+
+		//adding product details with updated quantity to the list
+		productsUpdated = append(productsUpdated, dto.ProductInfo{
+			ProductID: p.ProductID,
+			Quantity:  (productInfo.Quantity - p.Quantity),
+		})
 	}
 
 	//checking if premium products are equal or more than 3
@@ -223,5 +238,11 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 		discountedOrderAmount = orderAmount * (100 - discountPercent) / 100
 	}
 
-	return orderAmount, discountPercent, discountedOrderAmount, nil
+	orderInfo = repository.Order{
+		Amount:             orderAmount,
+		DiscountPercentage: discountPercent,
+		DiscountedAmount:   discountedOrderAmount,
+	}
+
+	return orderInfo, productsUpdated, nil
 }
