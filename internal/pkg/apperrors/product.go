@@ -29,3 +29,12 @@ type ProductQuantityExceeded struct {
 func (p ProductQuantityExceeded) Error() string {
 	return fmt.Sprintf("product quantity exceeded for id: %d, quantity_limit : %d and quantity_asked : %d", p.ID, p.QuantityLimit, p.QuantityAsked)
 }
+
+type ProductQuantityInvalid struct {
+	ID       int64
+	Quantity int64
+}
+
+func (p ProductQuantityInvalid) Error() string {
+	return fmt.Sprintf("product quantity invalid for id: %d, quantity : %d", p.ID, p.Quantity)
+}

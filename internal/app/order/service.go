@@ -200,46 +200,56 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 	var discountPercent float64
 	var finalOrderAmount float64
 
+	//merging multiple product with same ID
+	productQuantityMap := make(map[int64]int64)
 	for _, p := range requestedProducts {
-		productInfo, err := os.productRepo.GetProductByID(ctx, tx, p.ProductID)
+		if _, ok := productQuantityMap[p.ProductID]; !ok {
+			productQuantityMap[p.ProductID] = p.Quantity
+		}
+
+		productQuantityMap[p.ProductID] = productQuantityMap[p.ProductID] + p.Quantity
+	}
+
+	for productID, productQuantity := range productQuantityMap {
+		productInfoDB, err := os.productRepo.GetProductByID(ctx, tx, productID)
 		if err != nil {
 			return repository.Order{}, productsUpdated, err
 		}
 
 		//product not found, return error apperrors.ProductNotFound
-		if productInfo.ID == 0 {
-			return repository.Order{}, productsUpdated, apperrors.ProductNotFound{ID: int64(p.ProductID)}
+		if productInfoDB.ID == 0 {
+			return repository.Order{}, productsUpdated, apperrors.ProductNotFound{ID: productID}
 		}
 
 		//product quantity insufficient, return error apperrors.ProductQuantityInsufficient
-		if productInfo.Quantity < p.Quantity {
+		if productInfoDB.Quantity < productQuantity {
 			return repository.Order{}, productsUpdated, apperrors.ProductQuantityInsufficient{
-				ID:                p.ProductID,
-				QuantityAsked:     p.Quantity,
-				QuantityRemaining: productInfo.Quantity,
+				ID:                productID,
+				QuantityAsked:     productQuantity,
+				QuantityRemaining: productInfoDB.Quantity,
 			}
 		}
 
 		//product quantity exceeded limit, return error apperrors.ProductQuantityExceeded
-		if p.Quantity > product.MaxProductQuantity {
+		if productQuantity > product.MaxProductQuantity {
 			return repository.Order{}, productsUpdated, apperrors.ProductQuantityExceeded{
-				ID:            p.ProductID,
-				QuantityAsked: p.Quantity,
+				ID:            productID,
+				QuantityAsked: productQuantity,
 				QuantityLimit: product.MaxProductQuantity,
 			}
 		}
 
-		orderAmount = orderAmount + (float64(p.Quantity) * productInfo.Price)
+		orderAmount = orderAmount + (float64(productQuantity) * productInfoDB.Price)
 
 		//update premium product counter
-		if productInfo.Category == string(product.PremiumProduct) {
+		if productInfoDB.Category == string(product.PremiumProduct) {
 			premiumProductCount = premiumProductCount + 1
 		}
 
 		//adding product details with updated quantity to the list
 		productsUpdated = append(productsUpdated, dto.ProductInfo{
-			ProductID: p.ProductID,
-			Quantity:  (productInfo.Quantity - p.Quantity),
+			ProductID: productID,
+			Quantity:  (productInfoDB.Quantity - productQuantity),
 		})
 	}
 

@@ -28,6 +28,15 @@ func createOrderHandler(orderSvc order.Service) func(w http.ResponseWriter, r *h
 			return
 		}
 
+		err = req.Validate()
+		if err != nil {
+			logger.Errorw(ctx, "error occured while validating create order request",
+				zap.Error(err),
+			)
+			middleware.ErrorResponse(ctx, w, http.StatusUnprocessableEntity, err)
+			return
+		}
+
 		orderInfo, err := orderSvc.CreateOrder(ctx, req)
 		if err != nil {
 			logger.Errorw(ctx, "error occured while creating order",
