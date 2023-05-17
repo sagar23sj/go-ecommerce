@@ -6,15 +6,15 @@ import (
 )
 
 type Order struct {
-	ID                 int64         `json:"id,omitempty"`
+	ID                 int64         `json:"id"`
 	Products           []ProductInfo `json:"products,omitempty"`
-	Amount             float64       `json:"amount,omitempty"`
-	DiscountPercentage float64       `json:"discount_percent,omitempty"`
-	DiscountedAmount   float64       `json:"discounted_amount,omitempty"`
-	Status             string        `json:"status,omitempty"`
+	Amount             float64       `json:"amount"`
+	DiscountPercentage float64       `json:"discount_percent"`
+	FinalAmount        float64       `json:"final_amount"`
+	Status             string        `json:"status"`
 	DispatchedAt       time.Time     `json:"dispatched_at,omitempty"`
-	CreatedAt          time.Time     `json:"created_at,omitempty"`
-	UpdatedAt          time.Time     `json:"updated_at,omitempty"`
+	CreatedAt          time.Time     `json:"created_at"`
+	UpdatedAt          time.Time     `json:"updated_at"`
 }
 
 type ProductInfo struct {

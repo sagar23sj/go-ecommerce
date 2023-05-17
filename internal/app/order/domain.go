@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	DiscountPercentage = 10
+	DefaultDiscountPercentage = 10
 )
 
 type OrderStatus int
@@ -37,7 +37,7 @@ var ListOrderStatus = []string{
 	"Returned",
 }
 
-func MapOrderRepoToOrderDto(order repository.Order, orderItems []repository.OrderItem) dto.Order {
+func MapOrderRepoToOrderDto(order repository.Order, orderItems ...repository.OrderItem) dto.Order {
 
 	productInfo := make([]dto.ProductInfo, 0)
 	for _, orderItem := range orderItems {
@@ -52,7 +52,7 @@ func MapOrderRepoToOrderDto(order repository.Order, orderItems []repository.Orde
 		Products:           productInfo,
 		Amount:             order.Amount,
 		DiscountPercentage: order.DiscountPercentage,
-		DiscountedAmount:   order.DiscountedAmount,
+		FinalAmount:        order.FinalAmount,
 		Status:             order.Status,
 		DispatchedAt:       order.DispatchedAt,
 		CreatedAt:          order.CreatedAt,

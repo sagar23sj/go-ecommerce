@@ -31,7 +31,7 @@ type Order struct {
 	gorm.Model
 	Amount             float64
 	DiscountPercentage float64
-	DiscountedAmount   float64
+	FinalAmount        float64
 	Status             string
 	DispatchedAt       time.Time
 }

@@ -89,18 +89,7 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 		return dto.Order{}, err
 	}
 
-	order = dto.Order{
-		ID:                 int64(orderDB.ID),
-		Products:           orderDetails.Products,
-		Amount:             orderDB.Amount,
-		DiscountPercentage: orderDB.DiscountPercentage,
-		DiscountedAmount:   orderDB.DiscountedAmount,
-		Status:             orderDB.Status,
-		DispatchedAt:       orderDB.DispatchedAt,
-		CreatedAt:          orderDB.CreatedAt,
-		UpdatedAt:          orderDB.UpdatedAt,
-	}
-
+	order = MapOrderRepoToOrderDto(orderDB, orderItems...)
 	return order, nil
 }
 
@@ -119,26 +108,7 @@ func (os *service) GetOrderDetailsByID(ctx context.Context, orderID int64) (orde
 		return dto.Order{}, err
 	}
 
-	products := make([]dto.ProductInfo, 0)
-	for _, items := range orderItemsDB {
-		products = append(products, dto.ProductInfo{
-			ProductID: items.ProductID,
-			Quantity:  items.Quantity,
-		})
-	}
-
-	order = dto.Order{
-		ID:                 int64(orderInfoDB.ID),
-		Products:           products,
-		Amount:             orderInfoDB.Amount,
-		DiscountPercentage: orderInfoDB.DiscountPercentage,
-		DiscountedAmount:   orderInfoDB.DiscountedAmount,
-		Status:             orderInfoDB.Status,
-		DispatchedAt:       orderInfoDB.DispatchedAt,
-		CreatedAt:          orderInfoDB.CreatedAt,
-		UpdatedAt:          orderInfoDB.UpdatedAt,
-	}
-
+	order = MapOrderRepoToOrderDto(orderInfoDB, orderItemsDB...)
 	return order, nil
 }
 
@@ -151,15 +121,7 @@ func (os *service) ListOrders(ctx context.Context) ([]dto.Order, error) {
 	}
 
 	for _, order := range orderListDB {
-		orderList = append(orderList, dto.Order{
-			ID:                 int64(order.ID),
-			Amount:             order.Amount,
-			DiscountPercentage: order.DiscountPercentage,
-			DiscountedAmount:   order.DiscountedAmount,
-			Status:             order.Status,
-			CreatedAt:          order.CreatedAt,
-			UpdatedAt:          order.UpdatedAt,
-		})
+		orderList = append(orderList, MapOrderRepoToOrderDto(order))
 	}
 
 	return orderList, nil
@@ -180,19 +142,22 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 		}
 	}()
 
+	//order status invalid, return error OrderStatusInvalid
 	if _, ok := MapOrderStatus[status]; !ok {
 		return dto.Order{}, apperrors.OrderStatusInvalid{ID: orderID}
 	}
 
-	orderInfoDB, err := os.orderRepo.GetOrderByID(ctx, nil, orderID)
+	orderInfoDB, err := os.orderRepo.GetOrderByID(ctx, tx, orderID)
 	if err != nil {
 		return dto.Order{}, err
 	}
 
+	//order not found invalid, return error OrderNotFound
 	if orderInfoDB.ID == 0 {
 		return dto.Order{}, apperrors.OrderNotFound{ID: orderID}
 	}
 
+	//order status not allowed for update, return error OrderUpdationInvalid
 	isUpdationValid := os.validateUpdateOrderStatusRequest(ctx, status, orderInfoDB.Status)
 	if !isUpdationValid {
 		return dto.Order{}, apperrors.OrderUpdationInvalid{
@@ -207,12 +172,22 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 		return dto.Order{}, fmt.Errorf("error occured while updating order status: %w", err)
 	}
 
-	err = os.orderRepo.UpdateOrderDispatchDate(ctx, tx, orderID, time.Now())
-	if err != nil {
-		return dto.Order{}, fmt.Errorf("error occured while updating order dispatch date: %w", err)
+	//update dispatch date only when order is dispatched
+	if MapOrderStatus[status] == OrderDispatched {
+		orderDispatchedAt := time.Now()
+		err = os.orderRepo.UpdateOrderDispatchDate(ctx, tx, orderID, orderDispatchedAt)
+		if err != nil {
+			return dto.Order{}, fmt.Errorf("error occured while updating order dispatch date: %w", err)
+		}
 	}
 
-	return dto.Order{}, err
+	orderInfoDB, err = os.orderRepo.GetOrderByID(ctx, tx, orderID)
+	if err != nil {
+		return dto.Order{}, err
+	}
+
+	order = MapOrderRepoToOrderDto(orderInfoDB)
+	return order, err
 }
 
 func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm.DB, requestedProducts []dto.ProductInfo) (
@@ -223,7 +198,7 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 
 	var orderAmount float64
 	var discountPercent float64
-	var discountedOrderAmount float64
+	var finalOrderAmount float64
 
 	for _, p := range requestedProducts {
 		productInfo, err := os.productRepo.GetProductByID(ctx, tx, p.ProductID)
@@ -231,10 +206,12 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 			return repository.Order{}, productsUpdated, err
 		}
 
+		//product not found, return error apperrors.ProductNotFound
 		if productInfo.ID == 0 {
 			return repository.Order{}, productsUpdated, apperrors.ProductNotFound{ID: int64(p.ProductID)}
 		}
 
+		//product quantity insufficient, return error apperrors.ProductQuantityInsufficient
 		if productInfo.Quantity < p.Quantity {
 			return repository.Order{}, productsUpdated, apperrors.ProductQuantityInsufficient{
 				ID:                p.ProductID,
@@ -243,6 +220,7 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 			}
 		}
 
+		//product quantity exceeded limit, return error apperrors.ProductQuantityExceeded
 		if p.Quantity > product.MaxProductQuantity {
 			return repository.Order{}, productsUpdated, apperrors.ProductQuantityExceeded{
 				ID:            p.ProductID,
@@ -265,16 +243,17 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 		})
 	}
 
+	finalOrderAmount = orderAmount
 	//checking if premium products are equal or more than 3
 	if premiumProductCount >= product.PremiumProductsForDiscount {
-		discountPercent = DiscountPercentage
-		discountedOrderAmount = orderAmount * (100 - discountPercent) / 100
+		discountPercent = DefaultDiscountPercentage
+		finalOrderAmount = orderAmount * (100 - discountPercent) / 100
 	}
 
 	orderInfo = repository.Order{
 		Amount:             orderAmount,
 		DiscountPercentage: discountPercent,
-		DiscountedAmount:   discountedOrderAmount,
+		FinalAmount:        finalOrderAmount,
 	}
 
 	return orderInfo, productsUpdated, nil
@@ -289,8 +268,13 @@ func (os *service) validateUpdateOrderStatusRequest(ctx context.Context, Request
 		return false
 	}
 
+	//donot update if order is already cancelled
+	if currentOrderState == OrderCancelled {
+		return false
+	}
+
 	//allow cancel only before order is completed
-	if requestedOrderState == OrderCancelled && requestedOrderState < OrderCompleted {
+	if requestedOrderState == OrderCancelled && currentOrderState < OrderCompleted {
 		return true
 	}
 
