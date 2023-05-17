@@ -53,7 +53,7 @@ func getOrderDetailsHandler(orderSvc order.Service) func(w http.ResponseWriter, 
 				zap.String("id", rawOrderID),
 			)
 
-			middleware.ErrorResponse(ctx, w, http.StatusInternalServerError, apperrors.ErrInvalidRequestParam)
+			middleware.ErrorResponse(ctx, w, http.StatusBadRequest, apperrors.ErrInvalidRequestParam)
 			return
 		}
 
