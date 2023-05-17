@@ -158,7 +158,7 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 	}
 
 	//order status not allowed for update, return error OrderUpdationInvalid
-	isUpdationValid := os.validateUpdateOrderStatusRequest(ctx, status, orderInfoDB.Status)
+	isUpdationValid := validateUpdateOrderStatusRequest(status, orderInfoDB.Status)
 	if !isUpdationValid {
 		return dto.Order{}, apperrors.OrderUpdationInvalid{
 			ID:             orderID,
@@ -278,36 +278,4 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 	}
 
 	return orderInfo, productsUpdated, nil
-}
-
-func (os *service) validateUpdateOrderStatusRequest(ctx context.Context, RequestOrderStatus, DBOrderStatus string) (isUpdateValid bool) {
-	requestedOrderState := MapOrderStatus[RequestOrderStatus]
-	currentOrderState := MapOrderStatus[DBOrderStatus]
-
-	//donot update if requested and current state is same
-	if currentOrderState == requestedOrderState {
-		return false
-	}
-
-	//donot update if order is already cancelled
-	if currentOrderState == OrderCancelled {
-		return false
-	}
-
-	//allow cancel only before order is completed
-	if requestedOrderState == OrderCancelled && currentOrderState < OrderCompleted {
-		return true
-	}
-
-	//order state update should not go backwards unless it is cancel reqeust
-	if requestedOrderState < currentOrderState {
-		return false
-	}
-
-	//order status update can only go one step forward
-	if requestedOrderState != (currentOrderState + 1) {
-		return false
-	}
-
-	return true
 }

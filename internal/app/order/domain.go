@@ -37,6 +37,38 @@ var ListOrderStatus = []string{
 	"Returned",
 }
 
+func validateUpdateOrderStatusRequest(RequestOrderStatus, DBOrderStatus string) (isUpdateValid bool) {
+	requestedOrderState := MapOrderStatus[RequestOrderStatus]
+	currentOrderState := MapOrderStatus[DBOrderStatus]
+
+	//donot update if requested and current state is same
+	if currentOrderState == requestedOrderState {
+		return false
+	}
+
+	//donot update if order is already cancelled
+	if currentOrderState == OrderCancelled {
+		return false
+	}
+
+	//allow cancel only before order is completed
+	if requestedOrderState == OrderCancelled && currentOrderState < OrderCompleted {
+		return true
+	}
+
+	//order state update should not go backwards unless it is cancel reqeust
+	if requestedOrderState < currentOrderState {
+		return false
+	}
+
+	//order status update can only go one step forward
+	if requestedOrderState != (currentOrderState + 1) {
+		return false
+	}
+
+	return true
+}
+
 func MapOrderRepoToOrderDto(order repository.Order, orderItems ...repository.OrderItem) dto.Order {
 
 	productInfo := make([]dto.ProductInfo, 0)
