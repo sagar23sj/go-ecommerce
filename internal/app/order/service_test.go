@@ -168,11 +168,14 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 		suite.Run(test.name, func() {
 			test.setup()
 
-			_, err := suite.service.CreateOrder(context.Background(), dto.CreateOrderRequest{
+			order, err := suite.service.CreateOrder(context.Background(), dto.CreateOrderRequest{
 				Products: []dto.ProductInfo{{ProductID: test.input.Products[0].ProductID, Quantity: test.input.Products[0].Quantity}},
 			})
 
 			suite.Equal(test.expectedErr, err)
+			suite.Equal(test.expectedOutput.FinalAmount, order.FinalAmount)
+			suite.Equal(test.expectedOutput.Status, order.Status)
+			suite.Equal(test.expectedOutput.DiscountPercentage, order.DiscountPercentage)
 		})
 		suite.TearDownTest()
 	}
@@ -206,7 +209,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 					DiscountPercentage: 0.0,
 					FinalAmount:        20.0,
 					Status:             "Placed",
-				}, nil)
+				}, nil).Once()
 				suite.orderRepo.On("UpdateOrderStatus", mock.Anything, mock.Anything, int64(1), "Dispatched").Return(nil)
 				suite.orderRepo.On("UpdateOrderDispatchDate", mock.Anything, mock.Anything, int64(1), timeNow).Return(nil)
 				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
@@ -216,7 +219,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 					FinalAmount:        20.0,
 					Status:             "Dispatched",
 					DispatchedAt:       timeNow,
-				}, nil)
+				}, nil).NotBefore()
 			},
 			expectedOutput: dto.Order{
 				ID:                 int64(1),
@@ -289,9 +292,9 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 		suite.Run(test.name, func() {
 			test.setup()
 
-			_, err := suite.service.UpdateOrderStatus(context.Background(), test.input.OrderID, test.input.Status)
-
+			order, err := suite.service.UpdateOrderStatus(context.Background(), test.input.OrderID, test.input.Status)
 			suite.Equal(test.expectedErr, err)
+			suite.Equal(test.expectedOutput.Status, order.Status)
 		})
 		suite.TearDownTest()
 	}
