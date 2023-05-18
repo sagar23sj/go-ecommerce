@@ -104,6 +104,90 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 			expectedErr: nil,
 		},
 		{
+			name: "Success for 3 Premium Products",
+			input: dto.CreateOrderRequest{
+				Products: []dto.ProductInfo{
+					{
+						ProductID: int64(1),
+						Quantity:  int64(2),
+					},
+					{
+						ProductID: int64(2),
+						Quantity:  int64(2),
+					},
+					{
+						ProductID: int64(3),
+						Quantity:  int64(2),
+					},
+				},
+			},
+			setup: func() {
+				tx := &gorm.DB{}
+				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
+				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, nil).Return(nil)
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
+					ID:       int64(1),
+					Name:     "xyz",
+					Price:    10.0,
+					Category: "Premium",
+					Quantity: int64(10),
+				}, nil).Once()
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(2)).Return(dto.Product{
+					ID:       int64(2),
+					Name:     "xyz",
+					Price:    20.0,
+					Category: "Premium",
+					Quantity: int64(10),
+				}, nil).Once()
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(3)).Return(dto.Product{
+					ID:       int64(3),
+					Name:     "xyz",
+					Price:    30.0,
+					Category: "Premium",
+					Quantity: int64(10),
+				}, nil).Once()
+				suite.orderRepo.On("CreateOrder", mock.Anything, tx, repository.Order{
+					Amount:             120.0,
+					DiscountPercentage: 10.0,
+					FinalAmount:        108.0,
+					Status:             "Placed",
+				}).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             120.0,
+					DiscountPercentage: 10.0,
+					FinalAmount:        108.0,
+					Status:             "Placed",
+				}, nil)
+				suite.orderItemRepo.On("StoreOrderItems", mock.Anything, tx, []repository.OrderItem{
+					{
+						OrderID:   int64(1),
+						ProductID: int64(1),
+						Quantity:  int64(2),
+					},
+					{
+						OrderID:   int64(1),
+						ProductID: int64(2),
+						Quantity:  int64(2),
+					},
+					{
+						OrderID:   int64(1),
+						ProductID: int64(3),
+						Quantity:  int64(2),
+					},
+				}).Return(nil)
+				suite.productService.On("UpdateProductQuantity", mock.Anything, tx, map[int64]int64{1: 8, 2: 8, 3: 8}).Return(nil)
+			},
+			expectedOutput: dto.Order{
+				ID:                 int64(1),
+				Products:           []dto.ProductInfo{{ProductID: 1, Quantity: 2}},
+				Amount:             120.0,
+				DiscountPercentage: 10.0,
+				FinalAmount:        108.0,
+				Status:             "Placed",
+			},
+			expectedErr: nil,
+		},
+		{
 			name: "Failed Because Product Limit Exceeded",
 			input: dto.CreateOrderRequest{
 				Products: []dto.ProductInfo{
@@ -168,9 +252,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 		suite.Run(test.name, func() {
 			test.setup()
 
-			order, err := suite.service.CreateOrder(context.Background(), dto.CreateOrderRequest{
-				Products: []dto.ProductInfo{{ProductID: test.input.Products[0].ProductID, Quantity: test.input.Products[0].Quantity}},
-			})
+			order, err := suite.service.CreateOrder(context.Background(), test.input)
 
 			suite.Equal(test.expectedErr, err)
 			suite.Equal(test.expectedOutput.FinalAmount, order.FinalAmount)
