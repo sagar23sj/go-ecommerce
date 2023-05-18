@@ -222,7 +222,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				Products: []dto.ProductInfo{
 					{
 						ProductID: int64(1),
-						Quantity:  int64(12),
+						Quantity:  int64(8),
 					},
 				},
 			},
@@ -235,14 +235,14 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 					Name:     "xyz",
 					Price:    10.0,
 					Category: "Premium",
-					Quantity: int64(10),
+					Quantity: int64(6),
 				}, nil)
 			},
 			expectedOutput: dto.Order{},
 			expectedErr: apperrors.ProductQuantityInsufficient{
 				ID:                1,
-				QuantityRemaining: 10,
-				QuantityAsked:     12,
+				QuantityRemaining: 6,
+				QuantityAsked:     8,
 			},
 		},
 	}
