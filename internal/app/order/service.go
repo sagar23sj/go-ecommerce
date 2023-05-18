@@ -235,21 +235,21 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 			return repository.Order{}, productsUpdated, err
 		}
 
-		//product quantity insufficient, return error apperrors.ProductQuantityInsufficient
-		if productInfo.Quantity < p.Quantity {
-			return repository.Order{}, productsUpdated, apperrors.ProductQuantityInsufficient{
-				ID:                p.ProductID,
-				QuantityAsked:     p.Quantity,
-				QuantityRemaining: productInfo.Quantity,
-			}
-		}
-
 		//product quantity exceeded limit, return error apperrors.ProductQuantityExceeded
 		if p.Quantity > MaxProductQuantity {
 			return repository.Order{}, productsUpdated, apperrors.ProductQuantityExceeded{
 				ID:            p.ProductID,
 				QuantityAsked: p.Quantity,
 				QuantityLimit: MaxProductQuantity,
+			}
+		}
+
+		//product quantity insufficient, return error apperrors.ProductQuantityInsufficient
+		if productInfo.Quantity < p.Quantity {
+			return repository.Order{}, productsUpdated, apperrors.ProductQuantityInsufficient{
+				ID:                p.ProductID,
+				QuantityAsked:     p.Quantity,
+				QuantityRemaining: productInfo.Quantity,
 			}
 		}
 

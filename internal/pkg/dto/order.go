@@ -33,22 +33,18 @@ type UpdateOrderStatusRequest struct {
 
 func (req *CreateOrderRequest) Validate() error {
 
-	//map[ProductID]Count
-	productMap := make(map[int64]int)
+	//map[ProductID]bool
+	productMap := make(map[int64]bool)
 	for _, p := range req.Products {
-		if _, ok := productMap[p.ProductID]; !ok {
-			productMap[p.ProductID] = 1
-		} else {
-			productMap[p.ProductID] = productMap[p.ProductID] + 1
-		}
-
-		if productMap[p.ProductID] > 1 {
+		if _, ok := productMap[p.ProductID]; ok {
 			return fmt.Errorf("invalid request, duplicate product found with product_id : %d", p.ProductID)
 		}
 
 		if p.Quantity <= 0 {
 			return fmt.Errorf("invalid request, product quantity negative for product_id : %d", p.ProductID)
 		}
+
+		productMap[p.ProductID] = true
 	}
 
 	return nil
