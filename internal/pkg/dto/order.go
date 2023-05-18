@@ -12,7 +12,7 @@ type Order struct {
 	DiscountPercentage float64       `json:"discount_percent"`
 	FinalAmount        float64       `json:"final_amount"`
 	Status             string        `json:"status"`
-	DispatchedAt       time.Time     `json:"dispatched_at,omitempty"`
+	DispatchedAt       *time.Time    `json:"dispatched_at,omitempty"`
 	CreatedAt          time.Time     `json:"created_at"`
 	UpdatedAt          time.Time     `json:"updated_at"`
 }

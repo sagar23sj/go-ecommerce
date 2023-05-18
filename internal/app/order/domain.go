@@ -1,6 +1,8 @@
 package order
 
 import (
+	"time"
+
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 )
@@ -81,6 +83,11 @@ func MapOrderRepoToOrderDto(order repository.Order, orderItems ...repository.Ord
 		})
 	}
 
+	var dispatchedAt *time.Time = &order.DispatchedAt
+	if order.DispatchedAt.IsZero() {
+		dispatchedAt = nil
+	}
+
 	return dto.Order{
 		ID:                 int64(order.ID),
 		Products:           productInfo,
@@ -88,7 +95,7 @@ func MapOrderRepoToOrderDto(order repository.Order, orderItems ...repository.Ord
 		DiscountPercentage: order.DiscountPercentage,
 		FinalAmount:        order.FinalAmount,
 		Status:             order.Status,
-		DispatchedAt:       order.DispatchedAt,
+		DispatchedAt:       dispatchedAt,
 		CreatedAt:          order.CreatedAt,
 		UpdatedAt:          order.UpdatedAt,
 	}
