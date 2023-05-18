@@ -45,11 +45,6 @@ func validateUpdateOrderStatusRequest(RequestOrderStatus, DBOrderStatus string) 
 	requestedOrderState := MapOrderStatus[RequestOrderStatus]
 	currentOrderState := MapOrderStatus[DBOrderStatus]
 
-	//donot update if requested and current state is same
-	if currentOrderState == requestedOrderState {
-		return false
-	}
-
 	//donot update if order is already cancelled
 	if currentOrderState == OrderCancelled {
 		return false
@@ -60,8 +55,8 @@ func validateUpdateOrderStatusRequest(RequestOrderStatus, DBOrderStatus string) 
 		return true
 	}
 
-	//order state update should not go backwards unless it is cancel reqeust
-	if requestedOrderState < currentOrderState {
+	//donot update if requested state is same or lower to current state
+	if currentOrderState >= requestedOrderState {
 		return false
 	}
 
