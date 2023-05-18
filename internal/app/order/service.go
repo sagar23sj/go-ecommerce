@@ -245,11 +245,11 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 		}
 
 		//product quantity exceeded limit, return error apperrors.ProductQuantityExceeded
-		if p.Quantity > product.MaxProductQuantity {
+		if p.Quantity > MaxProductQuantity {
 			return repository.Order{}, productsUpdated, apperrors.ProductQuantityExceeded{
 				ID:            p.ProductID,
 				QuantityAsked: p.Quantity,
-				QuantityLimit: product.MaxProductQuantity,
+				QuantityLimit: MaxProductQuantity,
 			}
 		}
 
@@ -269,7 +269,7 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 
 	finalOrderAmount = orderAmount
 	//checking if premium products are equal or more than 3
-	if premiumProductCount >= product.PremiumProductsForDiscount {
+	if premiumProductCount >= PremiumProductsForDiscount {
 		discountPercent = DefaultDiscountPercentage
 		finalOrderAmount = orderAmount * (100 - discountPercent) / 100
 	}

@@ -13,17 +13,6 @@ const (
 	BudgetProduct  ProductType = "Budget"
 )
 
-const (
-	MaxProductQuantity         = 10
-	PremiumProductsForDiscount = 3
-)
-
-var ProductTypeMap = map[ProductType]struct{}{
-	PremiumProduct: {},
-	RegularProduct: {},
-	BudgetProduct:  {},
-}
-
 func MapRepoObjectToDto(repoObj repository.Product) dto.Product {
 	return dto.Product{
 		ID:        int64(repoObj.ID),

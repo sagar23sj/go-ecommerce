@@ -6,7 +6,9 @@ import (
 )
 
 const (
-	DefaultDiscountPercentage = 10
+	DefaultDiscountPercentage  = 10
+	MaxProductQuantity         = 10
+	PremiumProductsForDiscount = 3
 )
 
 type OrderStatus int
