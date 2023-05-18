@@ -3,33 +3,22 @@ package apperrors
 import "net/http"
 
 func MapError(err error) (statusCode int, errResponse error) {
-	if _, ok := err.(ProductNotFound); ok {
+	switch err.(type) {
+	case ProductNotFound:
 		return http.StatusBadRequest, err
-	}
-
-	if _, ok := err.(ProductQuantityInsufficient); ok {
+	case ProductQuantityInsufficient:
 		return http.StatusUnprocessableEntity, err
-	}
-
-	if _, ok := err.(ProductQuantityExceeded); ok {
+	case ProductQuantityExceeded:
 		return http.StatusUnprocessableEntity, err
-	}
-
-	if _, ok := err.(ProductQuantityInvalid); ok {
+	case ProductQuantityInvalid:
 		return http.StatusUnprocessableEntity, err
-	}
-
-	if _, ok := err.(OrderStatusInvalid); ok {
+	case OrderStatusInvalid:
 		return http.StatusUnprocessableEntity, err
-	}
-
-	if _, ok := err.(OrderUpdationInvalid); ok {
+	case OrderUpdationInvalid:
 		return http.StatusUnprocessableEntity, err
-	}
-
-	if _, ok := err.(OrderNotFound); ok {
+	case OrderNotFound:
 		return http.StatusBadRequest, err
+	default:
+		return http.StatusInternalServerError, err
 	}
-
-	return http.StatusInternalServerError, err
 }
