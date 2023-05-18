@@ -71,24 +71,29 @@ make clean
 ├── Go-E-Commerce.postman_collection.json
 ├── Makefile
 ├── README.md
-├── cmd  #Application Entrypoint
+├── cmd
 │   └── main.go
 ├── go.mod
 ├── go.sum
-└── internal   #Application Code
-    ├── api    #Handlers & Router
+└── internal
+    ├── api
     │   ├── order.go
     │   ├── product.go
     │   └── router.go
-    ├── app   #Business Layer
+    ├── app
     │   ├── dependencies.go
     │   ├── order
     │   │   ├── domain.go
-    │   │   └── service.go
+    │   │   ├── domain_test.go
+    │   │   ├── service.go
+    │   │   └── service_test.go
     │   └── product
     │       ├── domain.go
-    │       └── service.go
-    ├── pkg  #Packages shared by application code
+    │       ├── mocks
+    │       │   └── Service.go
+    │       ├── service.go
+    │       └── service_test.go
+    ├── pkg
     │   ├── apperrors
     │   │   ├── errors.go
     │   │   ├── map_errors.go
@@ -103,8 +108,12 @@ make clean
     │   │   └── logger.go
     │   └── middleware
     │       └── response_writer.go
-    └── repository  #Database Layer
+    └── repository
         ├── init.go
+        ├── mocks
+        │   ├── OrderItemStorer.go
+        │   ├── OrderStorer.go
+        │   └── ProductStorer.go
         ├── order.go
         ├── order_items.go
         ├── product.go
