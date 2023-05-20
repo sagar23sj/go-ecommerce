@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/asdine/storm/v3"
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/logger"
@@ -10,7 +11,7 @@ import (
 )
 
 func InitializeDatabase() (db *storm.DB, err error) {
-	db, err = storm.Open("my.db")
+	db, err = storm.Open("test.db")
 	if err != nil {
 		log.Printf("error occured while creating database connection: %v", err.Error())
 		return nil, err
@@ -41,20 +42,22 @@ func seedDatabase(db *storm.DB) (err error) {
 		return
 	}
 
+	now := time.Now()
 	products = []Product{
-		{Name: "Nike Sneaker", Price: 5000.00, Category: "Premium", Quantity: 20},
-		{Name: "Puma Hoodie", Price: 3000.00, Category: "Premium", Quantity: 20},
-		{Name: "G-Shock Watch", Price: 8000.00, Category: "Premium", Quantity: 20},
-		{Name: "X-Box 360", Price: 25000.00, Category: "Premium", Quantity: 20},
-		{Name: "Samsung Smart Watch", Price: 10000.00, Category: "Premium", Quantity: 20},
-		{Name: "H&M Sweat Shirt", Price: 1500.00, Category: "Regular", Quantity: 20},
-		{Name: "RedTape Sneakers", Price: 1800.00, Category: "Regular", Quantity: 20},
-		{Name: "Shirt", Price: 800.00, Category: "Budget", Quantity: 20},
-		{Name: "Pant", Price: 1000.00, Category: "Budget", Quantity: 20},
+		{Name: "Nike Sneaker", Price: 5000.00, Category: "Premium", Quantity: 20, CreatedAt: now, UpdatedAt: now},
+		{Name: "Puma Hoodie", Price: 3000.00, Category: "Premium", Quantity: 20, CreatedAt: now, UpdatedAt: now},
+		{Name: "G-Shock Watch", Price: 8000.00, Category: "Premium", Quantity: 20, CreatedAt: now, UpdatedAt: now},
+		{Name: "X-Box 360", Price: 25000.00, Category: "Premium", Quantity: 20, CreatedAt: now, UpdatedAt: now},
+		{Name: "Samsung Smart Watch", Price: 10000.00, Category: "Premium", Quantity: 20, CreatedAt: now, UpdatedAt: now},
+		{Name: "H&M Sweat Shirt", Price: 1500.00, Category: "Regular", Quantity: 20, CreatedAt: now, UpdatedAt: now},
+		{Name: "RedTape Sneakers", Price: 1800.00, Category: "Regular", Quantity: 20, CreatedAt: now, UpdatedAt: now},
+		{Name: "Jeans", Price: 2000.00, Category: "Regular", Quantity: 20, CreatedAt: now, UpdatedAt: now},
+		{Name: "Shirt", Price: 800.00, Category: "Budget", Quantity: 20, CreatedAt: now, UpdatedAt: now},
+		{Name: "Cargo Pants", Price: 1000.00, Category: "Budget", Quantity: 20, CreatedAt: now, UpdatedAt: now},
 	}
 
 	for _, product := range products {
-		err = db.Save(product)
+		err = db.Save(&product)
 		if err != nil {
 			logger.Errorw(context.Background(), "error occured while seeding product in database",
 				zap.Error(err),

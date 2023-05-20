@@ -38,11 +38,11 @@ func NewProductRepo(db *storm.DB) ProductStorer {
 func (ps *productStore) GetProductByID(ctx context.Context, tx Transaction, productID int64) (Product, error) {
 	var product Product
 
-	// queryExecutor := ps.initiateQueryExecutor(tx)
-	// err := queryExecutor.First(&product, productID).Error
-	// if err != nil && err != gorm.ErrRecordNotFound {
-	// 	return Product{}, err
-	// }
+	queryExecutor := ps.initiateQueryExecutor(tx)
+	err := queryExecutor.One("ID", productID, &product)
+	if err != nil && err != storm.ErrNotFound {
+		return Product{}, err
+	}
 
 	return product, nil
 }
@@ -50,26 +50,26 @@ func (ps *productStore) GetProductByID(ctx context.Context, tx Transaction, prod
 func (ps *productStore) ListProducts(ctx context.Context, tx Transaction) ([]Product, error) {
 	productList := make([]Product, 0)
 
-	// queryExecutor := ps.initiateQueryExecutor(tx)
-	// err := queryExecutor.Find(&productList).Error
-	// if err != nil {
-	// 	return productList, err
-	// }
+	queryExecutor := ps.initiateQueryExecutor(tx)
+	err := queryExecutor.All(&productList)
+	if err != nil {
+		return productList, err
+	}
 
 	return productList, nil
 }
 
 func (ps *productStore) UpdateProductQuantity(ctx context.Context, tx Transaction, productsQuantityMap map[int64]int64) error {
-	// queryExecutor := ps.initiateQueryExecutor(tx)
+	queryExecutor := ps.initiateQueryExecutor(tx)
 
-	// // Iterate over the map to set the quantity for each product ID
-	// for productID, quantity := range productsQuantityMap {
-	// 	// Update the records with the given product ID
-	// 	err := queryExecutor.Model(&Product{}).Where("id = ?", productID).Update("quantity", quantity).Error
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// }
+	// Iterate over the map to set the quantity for each product ID
+	for productID, quantity := range productsQuantityMap {
+		// Update the records with the given product ID
+		err := queryExecutor.UpdateField(&Product{ID: uint(productID)}, "Quantity", quantity)
+		if err != nil {
+			return err
+		}
+	}
 
 	return nil
 }
