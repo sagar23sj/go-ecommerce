@@ -5,6 +5,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/asdine/storm/v3"
 	productMock "github.com/sagar23sj/go-ecommerce/internal/app/product/mocks"
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
@@ -12,7 +13,6 @@ import (
 	"github.com/sagar23sj/go-ecommerce/internal/repository/mocks"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
-	"gorm.io/gorm"
 )
 
 type OrderServiceTestSuite struct {
@@ -64,7 +64,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				},
 			},
 			setup: func() {
-				tx := &gorm.DB{}
+				tx := &storm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, nil).Return(nil)
 				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
@@ -122,7 +122,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				},
 			},
 			setup: func() {
-				tx := &gorm.DB{}
+				tx := &storm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, nil).Return(nil)
 				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
@@ -198,7 +198,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				},
 			},
 			setup: func() {
-				tx := &gorm.DB{}
+				tx := &storm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
 				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
@@ -227,7 +227,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				},
 			},
 			setup: func() {
-				tx := &gorm.DB{}
+				tx := &storm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
 				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
@@ -282,7 +282,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 				Status:  "Dispatched",
 			},
 			setup: func() {
-				tx := &gorm.DB{}
+				tx := &storm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
 				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
@@ -320,7 +320,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 				Status:  "test",
 			},
 			setup: func() {
-				tx := &gorm.DB{}
+				tx := &storm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
 			},
@@ -334,7 +334,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 				Status:  "Completed",
 			},
 			setup: func() {
-				tx := &gorm.DB{}
+				tx := &storm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
 				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
@@ -359,7 +359,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 				Status:  "Completed",
 			},
 			setup: func() {
-				tx := &gorm.DB{}
+				tx := &storm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
 				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{}, nil)

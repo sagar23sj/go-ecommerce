@@ -2,8 +2,9 @@ package repository
 
 import (
 	"context"
+	"time"
 
-	"gorm.io/gorm"
+	"github.com/asdine/storm/v3"
 )
 
 type orderItemStore struct {
@@ -13,42 +14,43 @@ type orderItemStore struct {
 type OrderItemStorer interface {
 	RepositoryTransaction
 
-	GetOrderItemsByOrderID(ctx context.Context, tx *gorm.DB, orderID int64) ([]OrderItem, error)
-	StoreOrderItems(ctx context.Context, tx *gorm.DB, orderItems []OrderItem) error
+	GetOrderItemsByOrderID(ctx context.Context, tx Transaction, orderID int64) ([]OrderItem, error)
+	StoreOrderItems(ctx context.Context, tx Transaction, orderItems []OrderItem) error
 }
 
-func NewOrderItemRepo(db *gorm.DB) OrderItemStorer {
+func NewOrderItemRepo(db *storm.DB) OrderItemStorer {
 	return &orderItemStore{
 		BaseRepository: BaseRepository{db},
 	}
 }
 
 type OrderItem struct {
-	gorm.Model
-	ID        uint `gorm:"primary_key"`
+	ID        uint `storm:"id,increment"`
 	OrderID   int64
 	ProductID int64
 	Quantity  int64
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
-func (ods *orderItemStore) GetOrderItemsByOrderID(ctx context.Context, tx *gorm.DB, orderID int64) ([]OrderItem, error) {
+func (ods *orderItemStore) GetOrderItemsByOrderID(ctx context.Context, tx Transaction, orderID int64) ([]OrderItem, error) {
 	orderItemList := make([]OrderItem, 0)
 
-	queryExecutor := ods.initiateQueryExecutor(tx)
-	err := queryExecutor.Where("order_id = ?", orderID).Find(&orderItemList).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
-		return orderItemList, err
-	}
+	// queryExecutor := ods.initiateQueryExecutor(tx)
+	// err := queryExecutor.Where("order_id = ?", orderID).Find(&orderItemList).Error
+	// if err != nil && err != gorm.ErrRecordNotFound {
+	// 	return orderItemList, err
+	// }
 
 	return orderItemList, nil
 }
 
-func (ods *orderItemStore) StoreOrderItems(ctx context.Context, tx *gorm.DB, orderItems []OrderItem) error {
-	queryExecutor := ods.initiateQueryExecutor(tx)
-	err := queryExecutor.Create(&orderItems).Error
-	if err != nil {
-		return err
-	}
+func (ods *orderItemStore) StoreOrderItems(ctx context.Context, tx Transaction, orderItems []OrderItem) error {
+	// queryExecutor := ods.initiateQueryExecutor(tx)
+	// err := queryExecutor.Create(&orderItems).Error
+	// if err != nil {
+	// 	return err
+	// }
 
 	return nil
 }

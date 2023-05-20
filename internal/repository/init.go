@@ -1,21 +1,25 @@
 package repository
 
 import (
+	"context"
 	"log"
 
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	"github.com/asdine/storm/v3"
+	"github.com/sagar23sj/go-ecommerce/internal/pkg/logger"
+	"go.uber.org/zap"
 )
 
-func InitializeDatabase() (db *gorm.DB, err error) {
-	db, err = gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
+func InitializeDatabase() (db *storm.DB, err error) {
+	db, err = storm.Open("my.db")
 	if err != nil {
 		log.Printf("error occured while creating database connection: %v", err.Error())
 		return nil, err
 	}
 
 	//migrate database tables
-	db.AutoMigrate(&Order{}, &Product{}, &OrderItem{})
+	db.Init(&Order{})
+	db.Init(&Product{})
+	db.Init(&OrderItem{})
 
 	//seed products in database
 	err = seedDatabase(db)
@@ -27,13 +31,13 @@ func InitializeDatabase() (db *gorm.DB, err error) {
 	return db, nil
 }
 
-func seedDatabase(db *gorm.DB) (err error) {
+func seedDatabase(db *storm.DB) (err error) {
 
 	products := make([]Product, 0)
-	rowCount := db.Find(&products).RowsAffected
+	err = db.All(&products)
 
 	//database already has some products, so not adding products again
-	if rowCount > 0 {
+	if len(products) > 0 {
 		return
 	}
 
@@ -49,6 +53,15 @@ func seedDatabase(db *gorm.DB) (err error) {
 		{Name: "Pant", Price: 1000.00, Category: "Budget", Quantity: 20},
 	}
 
-	err = db.Create(products).Error
+	for _, product := range products {
+		err = db.Save(product)
+		if err != nil {
+			logger.Errorw(context.Background(), "error occured while seeding product in database",
+				zap.Error(err),
+				zap.String("product_name", product.Name),
+			)
+		}
+	}
+
 	return err
 }
