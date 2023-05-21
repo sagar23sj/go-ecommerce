@@ -33,6 +33,12 @@ func createOrderHandler(orderSvc order.Service) func(w http.ResponseWriter, r *h
 			logger.Errorw(ctx, "error occured while validating create order request",
 				zap.Error(err),
 			)
+
+			if err == apperrors.ErrNoProductsToOrder {
+				middleware.ErrorResponse(ctx, w, http.StatusBadRequest, err)
+				return
+			}
+
 			middleware.ErrorResponse(ctx, w, http.StatusUnprocessableEntity, err)
 			return
 		}
@@ -92,6 +98,15 @@ func updateOrderStatusHandler(orderSvc order.Service) func(w http.ResponseWriter
 				zap.Error(err),
 			)
 			middleware.ErrorResponse(ctx, w, http.StatusBadRequest, apperrors.ErrInvalidRequestBody)
+			return
+		}
+
+		err = req.Validate()
+		if err != nil {
+			logger.Errorw(ctx, "error occured validating update order request",
+				zap.Error(err),
+			)
+			middleware.ErrorResponse(ctx, w, http.StatusBadRequest, err)
 			return
 		}
 

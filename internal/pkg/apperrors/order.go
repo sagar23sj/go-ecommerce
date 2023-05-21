@@ -1,6 +1,13 @@
 package apperrors
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
+
+var (
+	ErrNoProductsToOrder = errors.New("no products to order")
+)
 
 type OrderNotFound struct {
 	ID int64

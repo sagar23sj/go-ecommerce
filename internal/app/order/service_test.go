@@ -2,6 +2,8 @@ package order
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"testing"
 	"time"
 
@@ -314,6 +316,59 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 			expectedErr: nil,
 		},
 		{
+			name: "Success When Order Cancelled",
+			input: dto.UpdateOrderStatusRequest{
+				OrderID: 1,
+				Status:  "Cancelled",
+			},
+			setup: func() {
+				tx := &storm.DB{}
+				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
+				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Placed",
+				}, nil).Once()
+				suite.orderRepo.On("UpdateOrderStatus", mock.Anything, mock.Anything, int64(1), "Cancelled").Return(nil)
+				suite.orderItemRepo.On("GetOrderItemsByOrderID", mock.Anything, mock.Anything, int64(1)).Return([]repository.OrderItem{
+					{
+						ID:        uint(1),
+						OrderID:   1,
+						ProductID: 1,
+						Quantity:  2,
+					},
+				}, nil).Once()
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
+					ID:       int64(1),
+					Name:     "xyz",
+					Price:    10.0,
+					Category: "Premium",
+					Quantity: int64(10),
+				}, nil)
+				suite.productService.On("UpdateProductQuantity", mock.Anything, tx, map[int64]int64{1: 12}).Return(nil)
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Cancelled",
+					DispatchedAt:       timeNow,
+				}, nil).NotBefore()
+			},
+			expectedOutput: dto.Order{
+				ID:                 int64(1),
+				Products:           []dto.ProductInfo{},
+				Amount:             20.0,
+				DiscountPercentage: 0.0,
+				FinalAmount:        20.0,
+				Status:             "Cancelled",
+			},
+			expectedErr: nil,
+		},
+		{
 			name: "Failed Because Order Status Invalid ",
 			input: dto.UpdateOrderStatusRequest{
 				OrderID: int64(1),
@@ -367,6 +422,28 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 			expectedOutput: dto.Order{},
 			expectedErr:    apperrors.OrderNotFound{ID: int64(1)},
 		},
+		{
+			name: "Failed Because Order Updation Failed",
+			input: dto.UpdateOrderStatusRequest{
+				OrderID: 1,
+				Status:  "Dispatched",
+			},
+			setup: func() {
+				tx := &storm.DB{}
+				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
+				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Placed",
+				}, nil).Once()
+				suite.orderRepo.On("UpdateOrderStatus", mock.Anything, mock.Anything, int64(1), "Dispatched").Return(errors.New("something went wrong"))
+			},
+			expectedOutput: dto.Order{},
+			expectedErr:    fmt.Errorf("error occured while updating order status: %w", errors.New("something went wrong")),
+		},
 	}
 
 	for _, test := range testCases {
@@ -377,6 +454,134 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 			order, err := suite.service.UpdateOrderStatus(context.Background(), test.input.OrderID, test.input.Status)
 			suite.Equal(test.expectedErr, err)
 			suite.Equal(test.expectedOutput.Status, order.Status)
+		})
+		suite.TearDownTest()
+	}
+}
+
+func (suite *OrderServiceTestSuite) TestGetOrdeDetails() {
+	type testCaseStruct struct {
+		name           string
+		orderID        int64
+		setup          func()
+		expectedOutput dto.Order
+		expectedErr    error
+	}
+
+	testCases := []testCaseStruct{
+		{
+			name:    "Success",
+			orderID: int64(1),
+			setup: func() {
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Placed",
+				}, nil).Once()
+				suite.orderItemRepo.On("GetOrderItemsByOrderID", mock.Anything, mock.Anything, int64(1)).Return([]repository.OrderItem{
+					{
+						ID:        uint(1),
+						OrderID:   1,
+						ProductID: 1,
+						Quantity:  2,
+					},
+				}, nil).Once()
+			},
+			expectedErr: nil,
+		},
+		{
+			name:    "Fail Because Something Wrong With Fetching OrderItems",
+			orderID: int64(1),
+			setup: func() {
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Placed",
+				}, nil).Once()
+				suite.orderItemRepo.On("GetOrderItemsByOrderID", mock.Anything, mock.Anything, int64(1)).Return([]repository.OrderItem{}, errors.New("error fetching data for OrderItems")).Once()
+			},
+			expectedErr: errors.New("error fetching data for OrderItems"),
+		},
+		{
+			name:    "Fail Because Something Wrong With Fetching Order",
+			orderID: int64(1),
+			setup: func() {
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{
+					ID:                 uint(1),
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Placed",
+				}, errors.New("error fetching data for Order")).Once()
+			},
+			expectedErr: errors.New("error fetching data for Order"),
+		},
+		{
+			name:    "Fail Because Order Not Found",
+			orderID: int64(1),
+			setup: func() {
+				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{}, nil).Once()
+			},
+			expectedErr: apperrors.OrderNotFound{ID: 1},
+		},
+	}
+
+	for _, test := range testCases {
+		suite.SetupTest()
+		suite.Run(test.name, func() {
+			test.setup()
+
+			_, err := suite.service.GetOrderDetailsByID(context.Background(), test.orderID)
+			suite.Equal(test.expectedErr, err)
+		})
+		suite.TearDownTest()
+	}
+}
+
+func (suite *OrderServiceTestSuite) TestListOrders() {
+	type testCaseStruct struct {
+		name           string
+		setup          func()
+		expectedOutput []dto.Order
+		expectedErr    error
+	}
+
+	testCases := []testCaseStruct{
+		{
+			name: "Success",
+			setup: func() {
+				suite.orderRepo.On("ListOrders", mock.Anything, mock.Anything).Return([]repository.Order{
+					{
+						ID:                 uint(1),
+						Amount:             20.0,
+						DiscountPercentage: 0.0,
+						FinalAmount:        20.0,
+						Status:             "Placed",
+					},
+				}, nil).Once()
+			},
+			expectedErr: nil,
+		},
+		{
+			name: "Fail Because Something Wrong With Fetching Orders List",
+			setup: func() {
+				suite.orderRepo.On("ListOrders", mock.Anything, mock.Anything).Return([]repository.Order{}, errors.New("error fetching data for Orders")).Once()
+			},
+			expectedErr: errors.New("error fetching data for Orders"),
+		},
+	}
+
+	for _, test := range testCases {
+		suite.SetupTest()
+		suite.Run(test.name, func() {
+			test.setup()
+
+			_, err := suite.service.ListOrders(context.Background())
+			suite.Equal(test.expectedErr, err)
 		})
 		suite.TearDownTest()
 	}
