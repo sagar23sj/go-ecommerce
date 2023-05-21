@@ -105,7 +105,7 @@ func updateOrderStatusHandler(orderSvc order.Service) func(w http.ResponseWriter
 			return
 		}
 
-		middleware.SuccessResponse(ctx, w, http.StatusCreated, orderInfo)
+		middleware.SuccessResponse(ctx, w, http.StatusOK, orderInfo)
 	}
 }
 
