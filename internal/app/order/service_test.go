@@ -489,6 +489,14 @@ func (suite *OrderServiceTestSuite) TestGetOrdeDetails() {
 					},
 				}, nil).Once()
 			},
+			expectedOutput: dto.Order{
+				ID:                 int64(1),
+				Products:           []dto.ProductInfo{{ProductID: 1, Quantity: 2}},
+				Amount:             20.0,
+				DiscountPercentage: 0.0,
+				FinalAmount:        20.0,
+				Status:             "Placed",
+			},
 			expectedErr: nil,
 		},
 		{
@@ -504,7 +512,8 @@ func (suite *OrderServiceTestSuite) TestGetOrdeDetails() {
 				}, nil).Once()
 				suite.orderItemRepo.On("GetOrderItemsByOrderID", mock.Anything, mock.Anything, int64(1)).Return([]repository.OrderItem{}, errors.New("error fetching data for OrderItems")).Once()
 			},
-			expectedErr: errors.New("error fetching data for OrderItems"),
+			expectedOutput: dto.Order{},
+			expectedErr:    errors.New("error fetching data for OrderItems"),
 		},
 		{
 			name:    "Fail Because Something Wrong With Fetching Order",
@@ -518,7 +527,8 @@ func (suite *OrderServiceTestSuite) TestGetOrdeDetails() {
 					Status:             "Placed",
 				}, errors.New("error fetching data for Order")).Once()
 			},
-			expectedErr: errors.New("error fetching data for Order"),
+			expectedOutput: dto.Order{},
+			expectedErr:    errors.New("error fetching data for Order"),
 		},
 		{
 			name:    "Fail Because Order Not Found",
@@ -526,7 +536,8 @@ func (suite *OrderServiceTestSuite) TestGetOrdeDetails() {
 			setup: func() {
 				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{}, nil).Once()
 			},
-			expectedErr: apperrors.OrderNotFound{ID: 1},
+			expectedOutput: dto.Order{},
+			expectedErr:    apperrors.OrderNotFound{ID: 1},
 		},
 	}
 
@@ -535,8 +546,11 @@ func (suite *OrderServiceTestSuite) TestGetOrdeDetails() {
 		suite.Run(test.name, func() {
 			test.setup()
 
-			_, err := suite.service.GetOrderDetailsByID(context.Background(), test.orderID)
+			order, err := suite.service.GetOrderDetailsByID(context.Background(), test.orderID)
 			suite.Equal(test.expectedErr, err)
+			suite.Equal(test.expectedOutput.ID, order.ID)
+			suite.Equal(test.expectedOutput.Products, order.Products)
+			suite.Equal(test.expectedOutput.Amount, order.Amount)
 		})
 		suite.TearDownTest()
 	}
@@ -564,6 +578,16 @@ func (suite *OrderServiceTestSuite) TestListOrders() {
 					},
 				}, nil).Once()
 			},
+			expectedOutput: []dto.Order{
+				{
+					ID:                 int64(1),
+					Products:           []dto.ProductInfo{},
+					Amount:             20.0,
+					DiscountPercentage: 0.0,
+					FinalAmount:        20.0,
+					Status:             "Cancelled",
+				},
+			},
 			expectedErr: nil,
 		},
 		{
@@ -571,7 +595,8 @@ func (suite *OrderServiceTestSuite) TestListOrders() {
 			setup: func() {
 				suite.orderRepo.On("ListOrders", mock.Anything, mock.Anything).Return([]repository.Order{}, errors.New("error fetching data for Orders")).Once()
 			},
-			expectedErr: errors.New("error fetching data for Orders"),
+			expectedOutput: []dto.Order{},
+			expectedErr:    errors.New("error fetching data for Orders"),
 		},
 	}
 
@@ -580,8 +605,9 @@ func (suite *OrderServiceTestSuite) TestListOrders() {
 		suite.Run(test.name, func() {
 			test.setup()
 
-			_, err := suite.service.ListOrders(context.Background())
+			orderList, err := suite.service.ListOrders(context.Background())
 			suite.Equal(test.expectedErr, err)
+			suite.Equal(len(test.expectedOutput), len(orderList))
 		})
 		suite.TearDownTest()
 	}
