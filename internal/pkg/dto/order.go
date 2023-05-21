@@ -1,8 +1,11 @@
 package dto
 
 import (
+	"errors"
 	"fmt"
 	"time"
+
+	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
 )
 
 type Order struct {
@@ -33,6 +36,10 @@ type UpdateOrderStatusRequest struct {
 
 func (req *CreateOrderRequest) Validate() error {
 
+	if len(req.Products) <= 0 {
+		return apperrors.ErrNoProductsToOrder
+	}
+
 	//map[ProductID]bool
 	productMap := make(map[int64]bool)
 	for _, p := range req.Products {
@@ -45,6 +52,18 @@ func (req *CreateOrderRequest) Validate() error {
 		}
 
 		productMap[p.ProductID] = true
+	}
+
+	return nil
+}
+
+func (req *UpdateOrderStatusRequest) Validate() error {
+	if req.OrderID == 0 {
+		return errors.New("order_id cannot be empty")
+	}
+
+	if req.Status == "" {
+		return errors.New("status cannot be empty")
 	}
 
 	return nil

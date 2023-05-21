@@ -1,6 +1,6 @@
 # Go E-Commerce Project
 
-[![codecov](https://codecov.io/gh/sagar23sj/go-ecommerce/branch/main/graph/badge.svg?token=NKLOFENXKD)](https://codecov.io/gh/sagar23sj/go-ecommerce)
+[![Project Test Coverage](https://codecov.io/gh/sagar23sj/go-ecommerce/branch/main/graph/badge.svg?token=NKLOFENXKD)](https://codecov.io/gh/sagar23sj/go-ecommerce)
 
 ## Problem Statement
 
@@ -45,7 +45,12 @@ make run
 make test
 ```
 
-3. Run following command to erase database to start fresh
+3. Run following command to check test coverage
+```bash
+make test-cover
+```
+
+4. Run following command to erase database to start fresh
 ```bash
 make clean 
 ```
@@ -76,18 +81,23 @@ make clean
 ├── README.md
 ├── cmd
 │   └── main.go
+├── coverage.out
 ├── go.mod
 ├── go.sum
 └── internal
     ├── api
     │   ├── order.go
+    │   ├── order_test.go
     │   ├── product.go
+    │   ├── product_test.go
     │   └── router.go
     ├── app
     │   ├── dependencies.go
     │   ├── order
     │   │   ├── domain.go
     │   │   ├── domain_test.go
+    │   │   ├── mocks
+    │   │   │   └── Service.go
     │   │   ├── service.go
     │   │   └── service_test.go
     │   └── product

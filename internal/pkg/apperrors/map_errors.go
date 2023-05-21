@@ -10,8 +10,6 @@ func MapError(err error) (statusCode int, errResponse error) {
 		return http.StatusUnprocessableEntity, err
 	case ProductQuantityExceeded:
 		return http.StatusUnprocessableEntity, err
-	case ProductQuantityInvalid:
-		return http.StatusUnprocessableEntity, err
 	case OrderNotFound:
 		return http.StatusNotFound, err
 	case OrderStatusInvalid:
