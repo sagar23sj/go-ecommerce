@@ -204,6 +204,17 @@ func (suite *OrderAPITestSuite) TestUpdateOrderStatusHandler() {
 			},
 			expectedStatusCode: http.StatusUnprocessableEntity,
 		},
+		{
+			name: "Fail Because Order Not Found",
+			input: dto.UpdateOrderStatusRequest{
+				OrderID: 1,
+				Status:  "Cancelled",
+			},
+			setup: func() {
+				suite.orderSvc.On("UpdateOrderStatus", mock.Anything, int64(1), "Cancelled").Return(dto.Order{}, apperrors.OrderNotFound{ID: 1})
+			},
+			expectedStatusCode: http.StatusNotFound,
+		},
 	}
 
 	for _, test := range testCases {
