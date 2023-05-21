@@ -68,15 +68,15 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/product/1",
+					"raw": "http://localhost:8080/products/11",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"product",
-						"1"
+						"products",
+						"11"
 					]
 				}
 			},
@@ -87,14 +87,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/product/2",
+							"raw": "http://localhost:8080/products/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"product",
+								"products",
 								"2"
 							]
 						}
@@ -125,14 +125,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/product/w",
+							"raw": "http://localhost:8080/products/w",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"product",
+								"products",
 								"w"
 							]
 						}
@@ -163,14 +163,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/product/11",
+							"raw": "http://localhost:8080/products/11",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"product",
+								"products",
 								"11"
 							]
 						}
@@ -204,7 +204,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 22\n        },\n        {\n            \"product_id\": 1,\n            \"quantity\": -4\n        },\n         {\n            \"product_id\": 3,\n            \"quantity\": 2\n        }\n    ]\n}",
+					"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 8\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 4\n        },\n         {\n            \"product_id\": 3,\n            \"quantity\": 2\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -212,14 +212,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/order",
+					"raw": "http://localhost:8080/orders",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"order"
+						"orders"
 					]
 				}
 			},
@@ -239,14 +239,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order",
+							"raw": "http://localhost:8080/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order"
+								"orders"
 							]
 						}
 					},
@@ -285,14 +285,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order",
+							"raw": "http://localhost:8080/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order"
+								"orders"
 							]
 						}
 					},
@@ -331,14 +331,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order",
+							"raw": "http://localhost:8080/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order"
+								"orders"
 							]
 						}
 					},
@@ -377,14 +377,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order",
+							"raw": "http://localhost:8080/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order"
+								"orders"
 							]
 						}
 					},
@@ -423,14 +423,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order",
+							"raw": "http://localhost:8080/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order"
+								"orders"
 							]
 						}
 					},
@@ -469,14 +469,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order",
+							"raw": "http://localhost:8080/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order"
+								"orders"
 							]
 						}
 					},
@@ -515,14 +515,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order",
+							"raw": "http://localhost:8080/orders",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order"
+								"orders"
 							]
 						}
 					},
@@ -554,14 +554,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/order/1",
+					"raw": "http://localhost:8080/orders/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"order",
+						"orders",
 						"1"
 					]
 				}
@@ -573,14 +573,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/order/1",
+							"raw": "http://localhost:8080/orders/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order",
+								"orders",
 								"1"
 							]
 						}
@@ -611,14 +611,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/order/12",
+							"raw": "http://localhost:8080/orders/12",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order",
+								"orders",
 								"12"
 							]
 						}
@@ -649,14 +649,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/order/w",
+							"raw": "http://localhost:8080/orders/w",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order",
+								"orders",
 								"w"
 							]
 						}
@@ -784,7 +784,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"order_id\": 1,\n    \"status\": \"Cancelled\"\n}",
+					"raw": "{\n    \"order_id\": 2,\n    \"status\": \"Dispatched\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -792,15 +792,15 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/order/1/status",
+					"raw": "http://localhost:8080/orders/2/status",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"order",
-						"1",
+						"orders",
+						"2",
 						"status"
 					]
 				}
@@ -821,14 +821,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order/1/status",
+							"raw": "http://localhost:8080/orders/1/status",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order",
+								"orders",
 								"1",
 								"status"
 							]
@@ -869,14 +869,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order/1/status",
+							"raw": "http://localhost:8080/orders/1/status",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order",
+								"orders",
 								"1",
 								"status"
 							]
@@ -917,14 +917,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order/1/status",
+							"raw": "http://localhost:8080/orders/1/status",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order",
+								"orders",
 								"1",
 								"status"
 							]
@@ -965,14 +965,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order/1/status",
+							"raw": "http://localhost:8080/orders/1/status",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order",
+								"orders",
 								"1",
 								"status"
 							]
@@ -1013,14 +1013,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/order/1/status",
+							"raw": "http://localhost:8080/orders/1/status",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"order",
+								"orders",
 								"1",
 								"status"
 							]
