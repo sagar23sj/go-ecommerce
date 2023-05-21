@@ -39,8 +39,6 @@ func getProductHandler(productSvc product.Service) func(w http.ResponseWriter, r
 		}
 
 		middleware.SuccessResponse(ctx, w, http.StatusOK, response)
-		return
-
 	}
 }
 
@@ -58,6 +56,5 @@ func listProductHandler(productSvc product.Service) func(w http.ResponseWriter, 
 		}
 
 		middleware.SuccessResponse(ctx, w, http.StatusOK, response)
-		return
 	}
 }

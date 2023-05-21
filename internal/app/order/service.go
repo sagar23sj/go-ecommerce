@@ -9,7 +9,6 @@ import (
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
 	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
-	"gorm.io/gorm"
 )
 
 var now = time.Now
@@ -219,7 +218,7 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 	return order, err
 }
 
-func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm.DB, requestedProducts []dto.ProductInfo) (
+func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx repository.Transaction, requestedProducts []dto.ProductInfo) (
 	orderInfo repository.Order, productsUpdated []dto.ProductInfo, err error) {
 
 	productsUpdated = make([]dto.ProductInfo, 0)

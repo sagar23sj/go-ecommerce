@@ -78,7 +78,6 @@ func getOrderDetailsHandler(orderSvc order.Service) func(w http.ResponseWriter, 
 		}
 
 		middleware.SuccessResponse(ctx, w, http.StatusOK, response)
-		return
 	}
 }
 
@@ -124,6 +123,5 @@ func listOrdersHandler(orderSvc order.Service) func(w http.ResponseWriter, r *ht
 		}
 
 		middleware.SuccessResponse(ctx, w, http.StatusOK, response)
-		return
 	}
 }

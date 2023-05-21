@@ -5,11 +5,8 @@ package mocks
 import (
 	context "context"
 
-	gorm "gorm.io/gorm"
-
-	mock "github.com/stretchr/testify/mock"
-
 	repository "github.com/sagar23sj/go-ecommerce/internal/repository"
+	mock "github.com/stretchr/testify/mock"
 
 	time "time"
 )
@@ -20,19 +17,19 @@ type OrderStorer struct {
 }
 
 // BeginTx provides a mock function with given fields: ctx
-func (_m *OrderStorer) BeginTx(ctx context.Context) (*gorm.DB, error) {
+func (_m *OrderStorer) BeginTx(ctx context.Context) (repository.Transaction, error) {
 	ret := _m.Called(ctx)
 
-	var r0 *gorm.DB
+	var r0 repository.Transaction
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context) (*gorm.DB, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) (repository.Transaction, error)); ok {
 		return rf(ctx)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context) *gorm.DB); ok {
+	if rf, ok := ret.Get(0).(func(context.Context) repository.Transaction); ok {
 		r0 = rf(ctx)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*gorm.DB)
+			r0 = ret.Get(0).(repository.Transaction)
 		}
 	}
 
@@ -45,36 +42,22 @@ func (_m *OrderStorer) BeginTx(ctx context.Context) (*gorm.DB, error) {
 	return r0, r1
 }
 
-// CommitTx provides a mock function with given fields: tx
-func (_m *OrderStorer) CommitTx(tx *gorm.DB) error {
-	ret := _m.Called(tx)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(*gorm.DB) error); ok {
-		r0 = rf(tx)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
 // CreateOrder provides a mock function with given fields: ctx, tx, order
-func (_m *OrderStorer) CreateOrder(ctx context.Context, tx *gorm.DB, order repository.Order) (repository.Order, error) {
+func (_m *OrderStorer) CreateOrder(ctx context.Context, tx repository.Transaction, order repository.Order) (repository.Order, error) {
 	ret := _m.Called(ctx, tx, order)
 
 	var r0 repository.Order
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, *gorm.DB, repository.Order) (repository.Order, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, repository.Transaction, repository.Order) (repository.Order, error)); ok {
 		return rf(ctx, tx, order)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, *gorm.DB, repository.Order) repository.Order); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, repository.Transaction, repository.Order) repository.Order); ok {
 		r0 = rf(ctx, tx, order)
 	} else {
 		r0 = ret.Get(0).(repository.Order)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, *gorm.DB, repository.Order) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, repository.Transaction, repository.Order) error); ok {
 		r1 = rf(ctx, tx, order)
 	} else {
 		r1 = ret.Error(1)
@@ -83,38 +66,22 @@ func (_m *OrderStorer) CreateOrder(ctx context.Context, tx *gorm.DB, order repos
 	return r0, r1
 }
 
-// GetConn provides a mock function with given fields:
-func (_m *OrderStorer) GetConn() *gorm.DB {
-	ret := _m.Called()
-
-	var r0 *gorm.DB
-	if rf, ok := ret.Get(0).(func() *gorm.DB); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*gorm.DB)
-		}
-	}
-
-	return r0
-}
-
 // GetOrderByID provides a mock function with given fields: ctx, tx, orderID
-func (_m *OrderStorer) GetOrderByID(ctx context.Context, tx *gorm.DB, orderID int64) (repository.Order, error) {
+func (_m *OrderStorer) GetOrderByID(ctx context.Context, tx repository.Transaction, orderID int64) (repository.Order, error) {
 	ret := _m.Called(ctx, tx, orderID)
 
 	var r0 repository.Order
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, *gorm.DB, int64) (repository.Order, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, repository.Transaction, int64) (repository.Order, error)); ok {
 		return rf(ctx, tx, orderID)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, *gorm.DB, int64) repository.Order); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, repository.Transaction, int64) repository.Order); ok {
 		r0 = rf(ctx, tx, orderID)
 	} else {
 		r0 = ret.Get(0).(repository.Order)
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, *gorm.DB, int64) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, repository.Transaction, int64) error); ok {
 		r1 = rf(ctx, tx, orderID)
 	} else {
 		r1 = ret.Error(1)
@@ -124,11 +91,11 @@ func (_m *OrderStorer) GetOrderByID(ctx context.Context, tx *gorm.DB, orderID in
 }
 
 // HandleTransaction provides a mock function with given fields: ctx, tx, incomingErr
-func (_m *OrderStorer) HandleTransaction(ctx context.Context, tx *gorm.DB, incomingErr error) error {
+func (_m *OrderStorer) HandleTransaction(ctx context.Context, tx repository.Transaction, incomingErr error) error {
 	ret := _m.Called(ctx, tx, incomingErr)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, *gorm.DB, error) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, repository.Transaction, error) error); ok {
 		r0 = rf(ctx, tx, incomingErr)
 	} else {
 		r0 = ret.Error(0)
@@ -138,15 +105,15 @@ func (_m *OrderStorer) HandleTransaction(ctx context.Context, tx *gorm.DB, incom
 }
 
 // ListOrders provides a mock function with given fields: ctx, tx
-func (_m *OrderStorer) ListOrders(ctx context.Context, tx *gorm.DB) ([]repository.Order, error) {
+func (_m *OrderStorer) ListOrders(ctx context.Context, tx repository.Transaction) ([]repository.Order, error) {
 	ret := _m.Called(ctx, tx)
 
 	var r0 []repository.Order
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, *gorm.DB) ([]repository.Order, error)); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, repository.Transaction) ([]repository.Order, error)); ok {
 		return rf(ctx, tx)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, *gorm.DB) []repository.Order); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, repository.Transaction) []repository.Order); ok {
 		r0 = rf(ctx, tx)
 	} else {
 		if ret.Get(0) != nil {
@@ -154,7 +121,7 @@ func (_m *OrderStorer) ListOrders(ctx context.Context, tx *gorm.DB) ([]repositor
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, *gorm.DB) error); ok {
+	if rf, ok := ret.Get(1).(func(context.Context, repository.Transaction) error); ok {
 		r1 = rf(ctx, tx)
 	} else {
 		r1 = ret.Error(1)
@@ -163,26 +130,12 @@ func (_m *OrderStorer) ListOrders(ctx context.Context, tx *gorm.DB) ([]repositor
 	return r0, r1
 }
 
-// RollbackTx provides a mock function with given fields: tx
-func (_m *OrderStorer) RollbackTx(tx *gorm.DB) error {
-	ret := _m.Called(tx)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(*gorm.DB) error); ok {
-		r0 = rf(tx)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
 // UpdateOrderDispatchDate provides a mock function with given fields: ctx, tx, orderID, dispatchedAt
-func (_m *OrderStorer) UpdateOrderDispatchDate(ctx context.Context, tx *gorm.DB, orderID int64, dispatchedAt time.Time) error {
+func (_m *OrderStorer) UpdateOrderDispatchDate(ctx context.Context, tx repository.Transaction, orderID int64, dispatchedAt time.Time) error {
 	ret := _m.Called(ctx, tx, orderID, dispatchedAt)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, *gorm.DB, int64, time.Time) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, repository.Transaction, int64, time.Time) error); ok {
 		r0 = rf(ctx, tx, orderID, dispatchedAt)
 	} else {
 		r0 = ret.Error(0)
@@ -192,11 +145,11 @@ func (_m *OrderStorer) UpdateOrderDispatchDate(ctx context.Context, tx *gorm.DB,
 }
 
 // UpdateOrderStatus provides a mock function with given fields: ctx, tx, orderID, status
-func (_m *OrderStorer) UpdateOrderStatus(ctx context.Context, tx *gorm.DB, orderID int64, status string) error {
+func (_m *OrderStorer) UpdateOrderStatus(ctx context.Context, tx repository.Transaction, orderID int64, status string) error {
 	ret := _m.Called(ctx, tx, orderID, status)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, *gorm.DB, int64, string) error); ok {
+	if rf, ok := ret.Get(0).(func(context.Context, repository.Transaction, int64, string) error); ok {
 		r0 = rf(ctx, tx, orderID, status)
 	} else {
 		r0 = ret.Error(0)

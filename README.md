@@ -20,16 +20,17 @@ dispatchDate should be populated only when the orderStatus is 'Dispatched'.
 
 
 product category values: Premium/Regular/Budget
-order status values: Placed/Dispatched/Completed/Cancelled
+order status values: Placed/Dispatched/Completed/Returned/Cancelled
 
-PS: Also added a Returned order status
+
+<b>PS: Added a minor change to have Returned state as well</b>
 </p>
 
 
 ## Setup
 
-This Project uses sqlite database and gorm to handle database queries.
-There are 9 products already seeded into database and whatever updations you make to database will persist until cleanup
+This Project uses key-value store BoltDB and storm toolkit to handle database queries.
+There are 10 products already seeded into database and whatever updations you make on database, it will persist even after you close the application. You can run the CleanUp command to start fresh.
 
 
 1. Run following command to start e-commerce Application
@@ -52,11 +53,11 @@ make clean
 
 
 1. <b>List Products API</b> : `GET http://localhost:8080/products`
-2. <b>Get Products Details API</b> : `GET http://localhost:8080/product/1`
-3. <b>Create order API</b> : `POST http://localhost:8080/order`
-4. <b>Get Order Details API</b> : `GET http://localhost:8080/order/2`
+2. <b>Get Products Details API</b> : `GET http://localhost:8080/products/{product_id}`
+3. <b>Create order API</b> : `POST http://localhost:8080/orders`
+4. <b>Get Order Details API</b> : `GET http://localhost:8080/orders/{order_id}`
 5. <b>List Orders API</b> : `GET http://localhost:8080/orders`
-6. <b>Updare Order Status API</b> : `PATCH http://localhost:8080/order/5/status`
+6. <b>Updare Order Status API</b> : `PATCH http://localhost:8080/orders/{order_id}/status`
 
 ## Postman Collection
 
@@ -71,16 +72,16 @@ make clean
 ├── Go-E-Commerce.postman_collection.json
 ├── Makefile
 ├── README.md
-├── cmd     #Application Entrypoint
+├── cmd
 │   └── main.go
 ├── go.mod
 ├── go.sum
-└── internal    #Application Code
-    ├── api     #Handlers & Router
+└── internal
+    ├── api
     │   ├── order.go
     │   ├── product.go
     │   └── router.go
-    ├── app     #Business Layer(Service Implementation)
+    ├── app
     │   ├── dependencies.go
     │   ├── order
     │   │   ├── domain.go
@@ -93,7 +94,7 @@ make clean
     │       │   └── Service.go
     │       ├── service.go
     │       └── service_test.go
-    ├── pkg     #Packages shared by application code
+    ├── pkg
     │   ├── apperrors
     │   │   ├── errors.go
     │   │   ├── map_errors.go
@@ -108,7 +109,12 @@ make clean
     │   │   └── logger.go
     │   └── middleware
     │       └── response_writer.go
-    └── repository  #Database Layer
+    └── repository
+        ├── boltdb
+        │   ├── base.go
+        │   ├── order.go
+        │   ├── order_items.go
+        │   └── product.go
         ├── init.go
         ├── mocks
         │   ├── OrderItemStorer.go
@@ -116,6 +122,6 @@ make clean
         │   └── ProductStorer.go
         ├── order.go
         ├── order_items.go
-        ├── product.go
+        ├── products.go
         └── repo.go
 ```
