@@ -29,22 +29,6 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
       run: go build -v cmd/main.go
 
-    # Run test cases on the code
-    - name: Run Test Cases
-      run: make test
-
-    # Generate Test Coverage of the Code
-    - name: Generate Test Coverage
-      run: |
-        go test -v ./... -covermode=count -coverprofile=coverage.out
-        go tool cover -func=coverage.out -o=coverage.out
-
-    # Add Code Coverage Tag on repository
-    - name: Go Coverage Badge  
-      uses: tj-actions/coverage-badge-go@v2
-      with:
-        filename: coverage.out
-
     # Run go vet on the code
     - name: Check go vet
       run: go vet ./...
@@ -61,3 +45,40 @@ jobs:
             curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
             golangci-lint run
+
+    # Run test cases on the code
+    - name: Run Test Cases
+      run: make test
+
+    # Generate Test Coverage of the Code
+    - name: Generate Test Coverage
+      run: |
+        go test -v ./... -covermode=count -coverprofile=coverage.out
+        go tool cover -func=coverage.out -o=coverage.out
+
+    # Add Code Coverage Tag on repository
+    - name: Go Coverage Badge  
+      uses: tj-actions/coverage-badge-go@v2
+      with:
+        filename: coverage.out
+
+    - name: Verify Changed files
+      uses: tj-actions/verify-changed-files@v12
+      id: verify-changed-files
+      with:
+        files: README.md
+
+    - name: Commit changes
+      if: steps.verify-changed-files.outputs.files_changed == 'true'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add README.md
+        git commit -m "chore: Updated coverage badge."
+
+    - name: Push changes
+      if: steps.verify-changed-files.outputs.files_changed == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ github.token }}
+        branch: ${{ github.head_ref }}
