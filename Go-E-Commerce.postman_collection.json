@@ -50,15 +50,15 @@
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 16 May 2023 17:53:38 GMT"
+							"value": "Sun, 21 May 2023 08:39:39 GMT"
 						},
 						{
 							"key": "Content-Length",
-							"value": "1632"
+							"value": "1795"
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": {\n        \"products\": [\n            {\n                \"id\": 1,\n                \"name\": \"Nike Sneaker\",\n                \"price\": 5000,\n                \"category\": \"Premium\",\n                \"quantity\": 20,\n                \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n                \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n            },\n            {\n                \"id\": 2,\n                \"name\": \"Puma Hoodie\",\n                \"price\": 3000,\n                \"category\": \"Premium\",\n                \"quantity\": 20,\n                \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n                \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n            },\n            {\n                \"id\": 3,\n                \"name\": \"G-Shock Watch\",\n                \"price\": 8000,\n                \"category\": \"Premium\",\n                \"quantity\": 20,\n                \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n                \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n            },\n            {\n                \"id\": 4,\n                \"name\": \"X-Box 360\",\n                \"price\": 25000,\n                \"category\": \"Premium\",\n                \"quantity\": 20,\n                \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n                \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n            },\n            {\n                \"id\": 5,\n                \"name\": \"Samsung Smart Watch\",\n                \"price\": 10000,\n                \"category\": \"Premium\",\n                \"quantity\": 20,\n                \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n                \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n            },\n            {\n                \"id\": 6,\n                \"name\": \"H&M Sweat Shirt\",\n                \"price\": 1500,\n                \"category\": \"Regular\",\n                \"quantity\": 20,\n                \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n                \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n            },\n            {\n                \"id\": 7,\n                \"name\": \"RedTape Sneakers\",\n                \"price\": 1800,\n                \"category\": \"Regular\",\n                \"quantity\": 20,\n                \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n                \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n            },\n            {\n                \"id\": 8,\n                \"name\": \"Shirt\",\n                \"price\": 800,\n                \"category\": \"Budget\",\n                \"quantity\": 20,\n                \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n                \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n            },\n            {\n                \"id\": 9,\n                \"name\": \"Pant\",\n                \"price\": 1000,\n                \"category\": \"Budget\",\n                \"quantity\": 20,\n                \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n                \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n            }\n        ]\n    }\n}"
+					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"name\": \"Nike Sneaker\",\n            \"price\": 5000,\n            \"category\": \"Premium\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Puma Hoodie\",\n            \"price\": 3000,\n            \"category\": \"Premium\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"G-Shock Watch\",\n            \"price\": 8000,\n            \"category\": \"Premium\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"X-Box 360\",\n            \"price\": 25000,\n            \"category\": \"Premium\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"Samsung Smart Watch\",\n            \"price\": 10000,\n            \"category\": \"Premium\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"H&M Sweat Shirt\",\n            \"price\": 1500,\n            \"category\": \"Regular\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        },\n        {\n            \"id\": 7,\n            \"name\": \"RedTape Sneakers\",\n            \"price\": 1800,\n            \"category\": \"Regular\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"Jeans\",\n            \"price\": 2000,\n            \"category\": \"Regular\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"Shirt\",\n            \"price\": 800,\n            \"category\": \"Budget\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        },\n        {\n            \"id\": 10,\n            \"name\": \"Cargo Pants\",\n            \"price\": 1000,\n            \"category\": \"Budget\",\n            \"quantity\": 20,\n            \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n            \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n        }\n    ]\n}"
 				}
 			]
 		},
@@ -87,7 +87,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/product/1",
+							"raw": "http://localhost:8080/product/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -95,7 +95,7 @@
 							"port": "8080",
 							"path": [
 								"product",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -109,56 +109,18 @@
 						},
 						{
 							"key": "Date",
-							"value": "Tue, 16 May 2023 17:53:59 GMT"
+							"value": "Sun, 21 May 2023 08:40:02 GMT"
 						},
 						{
 							"key": "Content-Length",
-							"value": "217"
+							"value": "216"
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": {\n        \"id\": 1,\n        \"name\": \"Nike Sneaker\",\n        \"price\": 5000,\n        \"category\": \"Premium\",\n        \"quantity\": 20,\n        \"created_at\": \"2023-05-16T23:23:34.084881+05:30\",\n        \"updated_at\": \"2023-05-16T23:23:34.084881+05:30\"\n    }\n}"
+					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": {\n        \"id\": 2,\n        \"name\": \"Puma Hoodie\",\n        \"price\": 3000,\n        \"category\": \"Premium\",\n        \"quantity\": 20,\n        \"created_at\": \"2023-05-21T14:09:32.513725+05:30\",\n        \"updated_at\": \"2023-05-21T14:09:32.513725+05:30\"\n    }\n}"
 				},
 				{
-					"name": "Failure: Product Not Found",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/product/10",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"product",
-								"10"
-							]
-						}
-					},
-					"status": "Unprocessable Entity",
-					"code": 422,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Date",
-							"value": "Tue, 16 May 2023 18:08:55 GMT"
-						},
-						{
-							"key": "Content-Length",
-							"value": "78"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"product not found with id: 10\",\n    \"data\": null\n}"
-				},
-				{
-					"name": "Fail: invalid Path param",
+					"name": "Fail: Invalid Path param",
 					"originalRequest": {
 						"method": "GET",
 						"header": [],
@@ -194,6 +156,44 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"error_code\": 400,\n    \"error_message\": \"invalid request param\",\n    \"data\": null\n}"
+				},
+				{
+					"name": "Failure: Product Not Found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/product/11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"11"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 21 May 2023 08:42:03 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "78"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 404,\n    \"error_message\": \"product not found with id: 11\",\n    \"data\": null\n}"
 				}
 			]
 		},
@@ -204,7 +204,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 2\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 2\n        },\n         {\n            \"product_id\": 3,\n            \"quantity\": 2\n        }\n    ]\n}",
+					"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 22\n        },\n        {\n            \"product_id\": 1,\n            \"quantity\": -4\n        },\n         {\n            \"product_id\": 3,\n            \"quantity\": 2\n        }\n    ]\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -271,144 +271,6 @@
 					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": {\n        \"id\": 1,\n        \"products\": [\n            {\n                \"product_id\": 1,\n                \"quantity\": 2\n            },\n            {\n                \"product_id\": 2,\n                \"quantity\": 2\n            },\n            {\n                \"product_id\": 9,\n                \"quantity\": 10\n            }\n        ],\n        \"amount\": 26000,\n        \"discount_percent\": 0,\n        \"final_amount\": 26000,\n        \"status\": \"Placed\",\n        \"dispatched_at\": \"0001-01-01T00:00:00Z\",\n        \"created_at\": \"2023-05-17T17:00:51.863396+05:30\",\n        \"updated_at\": \"2023-05-17T17:00:51.863396+05:30\"\n    }\n}"
 				},
 				{
-					"name": "Incorrect Product ID",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 22,\n            \"quantity\": 2\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 2\n        },\n         {\n            \"product_id\": 9,\n            \"quantity\": 10\n        }\n    ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/order",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"order"
-							]
-						}
-					},
-					"status": "Bad Request",
-					"code": 400,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Date",
-							"value": "Wed, 17 May 2023 11:31:43 GMT"
-						},
-						{
-							"key": "Content-Length",
-							"value": "78"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"error_code\": 400,\n    \"error_message\": \"product not found with id: 22\",\n    \"data\": null\n}"
-				},
-				{
-					"name": "Product Limit Exceeded",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 11\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 2\n        },\n         {\n            \"product_id\": 9,\n            \"quantity\": 10\n        }\n    ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/order",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"order"
-							]
-						}
-					},
-					"status": "Unprocessable Entity",
-					"code": 422,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Date",
-							"value": "Wed, 17 May 2023 11:32:33 GMT"
-						},
-						{
-							"key": "Content-Length",
-							"value": "129"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"product quantity exceeded for id: 1, quantity_limit : 10 and quantity_asked : 11\",\n    \"data\": null\n}"
-				},
-				{
-					"name": "Product Quantity Insufficient",
-					"originalRequest": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 20\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 2\n        },\n         {\n            \"product_id\": 9,\n            \"quantity\": 10\n        }\n    ]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/order",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"order"
-							]
-						}
-					},
-					"status": "Unprocessable Entity",
-					"code": 422,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Date",
-							"value": "Wed, 17 May 2023 11:33:35 GMT"
-						},
-						{
-							"key": "Content-Length",
-							"value": "137"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"product quantity insufficient for id: 1, quantity_remaining : 18 and quantity_asked : 20\",\n    \"data\": null\n}"
-				},
-				{
 					"name": "Success With Discount",
 					"originalRequest": {
 						"method": "POST",
@@ -453,6 +315,98 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": {\n        \"id\": 2,\n        \"products\": [\n            {\n                \"product_id\": 1,\n                \"quantity\": 2\n            },\n            {\n                \"product_id\": 2,\n                \"quantity\": 2\n            },\n            {\n                \"product_id\": 3,\n                \"quantity\": 2\n            }\n        ],\n        \"amount\": 32000,\n        \"discount_percent\": 10,\n        \"final_amount\": 28800,\n        \"status\": \"Placed\",\n        \"dispatched_at\": \"0001-01-01T00:00:00Z\",\n        \"created_at\": \"2023-05-17T17:06:08.279852+05:30\",\n        \"updated_at\": \"2023-05-17T17:06:08.279852+05:30\"\n    }\n}"
+				},
+				{
+					"name": "Fail: Incorrect Product ID",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 11,\n            \"quantity\": 8\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 4\n        },\n         {\n            \"product_id\": 3,\n            \"quantity\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 21 May 2023 08:45:28 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "78"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 404,\n    \"error_message\": \"product not found with id: 11\",\n    \"data\": null\n}"
+				},
+				{
+					"name": "Fail: Duplicate product found",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 9\n        },\n        {\n            \"product_id\": 1,\n            \"quantity\": 2\n        },\n         {\n            \"product_id\": 3,\n            \"quantity\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order"
+							]
+						}
+					},
+					"status": "Unprocessable Entity",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 17 May 2023 15:36:47 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "109"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"invalid request, duplicate product found with product_id : 1\",\n    \"data\": null\n}"
 				},
 				{
 					"name": "Fail: Negative product quantity",
@@ -501,13 +455,13 @@
 					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"invalid request, product quantity negative for product_id : 2\",\n    \"data\": null\n}"
 				},
 				{
-					"name": "Fail: duplicate product found",
+					"name": "Fail: Product Limit Exceeded",
 					"originalRequest": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 9\n        },\n        {\n            \"product_id\": 1,\n            \"quantity\": 2\n        },\n         {\n            \"product_id\": 3,\n            \"quantity\": 2\n        }\n    ]\n}",
+							"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 11\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 2\n        },\n         {\n            \"product_id\": 9,\n            \"quantity\": 10\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -536,15 +490,61 @@
 						},
 						{
 							"key": "Date",
-							"value": "Wed, 17 May 2023 15:36:47 GMT"
+							"value": "Wed, 17 May 2023 11:32:33 GMT"
 						},
 						{
 							"key": "Content-Length",
-							"value": "109"
+							"value": "129"
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"invalid request, duplicate product found with product_id : 1\",\n    \"data\": null\n}"
+					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"product quantity exceeded for id: 1, quantity_limit : 10 and quantity_asked : 11\",\n    \"data\": null\n}"
+				},
+				{
+					"name": "Fail: Product Quantity Insufficient",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"products\": [\n        {\n            \"product_id\": 1,\n            \"quantity\": 8\n        },\n        {\n            \"product_id\": 2,\n            \"quantity\": 4\n        },\n         {\n            \"product_id\": 3,\n            \"quantity\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/order",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order"
+							]
+						}
+					},
+					"status": "Unprocessable Entity",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 21 May 2023 08:48:15 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "135"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"product quantity insufficient for id: 1, quantity_remaining : 4 and quantity_asked : 8\",\n    \"data\": null\n}"
 				}
 			]
 		},
@@ -567,44 +567,6 @@
 				}
 			},
 			"response": [
-				{
-					"name": "Order Not Found",
-					"originalRequest": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8080/order/2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"order",
-								"2"
-							]
-						}
-					},
-					"status": "Bad Request",
-					"code": 400,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Date",
-							"value": "Wed, 17 May 2023 11:34:58 GMT"
-						},
-						{
-							"key": "Content-Length",
-							"value": "75"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"error_code\": 400,\n    \"error_message\": \"order not found with id: 2\",\n    \"data\": null\n}"
-				},
 				{
 					"name": "Success",
 					"originalRequest": {
@@ -642,6 +604,82 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": {\n        \"id\": 1,\n        \"products\": [\n            {\n                \"product_id\": 1,\n                \"quantity\": 2\n            },\n            {\n                \"product_id\": 2,\n                \"quantity\": 2\n            },\n            {\n                \"product_id\": 9,\n                \"quantity\": 10\n            }\n        ],\n        \"amount\": 26000,\n        \"discount_percent\": 0,\n        \"final_amount\": 26000,\n        \"status\": \"Placed\",\n        \"dispatched_at\": \"0001-01-01T00:00:00Z\",\n        \"created_at\": \"2023-05-17T17:00:51.863396+05:30\",\n        \"updated_at\": \"2023-05-17T17:00:51.863396+05:30\"\n    }\n}"
+				},
+				{
+					"name": "Fail: Order Not Found",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/order/12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"12"
+							]
+						}
+					},
+					"status": "Not Found",
+					"code": 404,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 21 May 2023 08:50:48 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "76"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 404,\n    \"error_message\": \"order not found with id: 12\",\n    \"data\": null\n}"
+				},
+				{
+					"name": "Fail: Invalid Path Param",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/order/w",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"w"
+							]
+						}
+					},
+					"status": "Bad Request",
+					"code": 400,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 21 May 2023 08:51:15 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "70"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 400,\n    \"error_message\": \"invalid request param\",\n    \"data\": null\n}"
 				}
 			]
 		},
@@ -690,15 +728,52 @@
 						},
 						{
 							"key": "Date",
-							"value": "Wed, 17 May 2023 11:36:44 GMT"
+							"value": "Sun, 21 May 2023 08:58:57 GMT"
 						},
 						{
 							"key": "Content-Length",
-							"value": "483"
+							"value": "406"
 						}
 					],
 					"cookie": [],
-					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"amount\": 26000,\n            \"discount_percent\": 0,\n            \"final_amount\": 26000,\n            \"status\": \"Placed\",\n            \"dispatched_at\": \"0001-01-01T00:00:00Z\",\n            \"created_at\": \"2023-05-17T17:00:51.863396+05:30\",\n            \"updated_at\": \"2023-05-17T17:00:51.863396+05:30\"\n        },\n        {\n            \"id\": 2,\n            \"amount\": 32000,\n            \"discount_percent\": 10,\n            \"final_amount\": 28800,\n            \"status\": \"Placed\",\n            \"dispatched_at\": \"0001-01-01T00:00:00Z\",\n            \"created_at\": \"2023-05-17T17:06:08.279852+05:30\",\n            \"updated_at\": \"2023-05-17T17:06:08.279852+05:30\"\n        }\n    ]\n}"
+					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"amount\": 68000,\n            \"discount_percent\": 10,\n            \"final_amount\": 61200,\n            \"status\": \"Placed\",\n            \"created_at\": \"2023-05-21T14:27:58.629432+05:30\",\n            \"updated_at\": \"2023-05-21T14:27:58.629432+05:30\"\n        },\n        {\n            \"id\": 2,\n            \"amount\": 68000,\n            \"discount_percent\": 10,\n            \"final_amount\": 61200,\n            \"status\": \"Placed\",\n            \"created_at\": \"2023-05-21T14:28:46.557716+05:30\",\n            \"updated_at\": \"2023-05-21T14:28:46.557716+05:30\"\n        }\n    ]\n}"
+				},
+				{
+					"name": "Success: 1 Order Dispatched",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/orders",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Sun, 21 May 2023 08:52:36 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "461"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": [\n        {\n            \"id\": 1,\n            \"amount\": 68000,\n            \"discount_percent\": 10,\n            \"final_amount\": 61200,\n            \"status\": \"Dispatched\",\n            \"dispatched_at\": \"2023-05-21T14:22:31.501881+05:30\",\n            \"created_at\": \"2023-05-21T14:15:08.140921+05:30\",\n            \"updated_at\": \"2023-05-21T14:22:31.501881+05:30\"\n        },\n        {\n            \"id\": 2,\n            \"amount\": 68000,\n            \"discount_percent\": 10,\n            \"final_amount\": 61200,\n            \"status\": \"Placed\",\n            \"created_at\": \"2023-05-21T14:18:14.114358+05:30\",\n            \"updated_at\": \"2023-05-21T14:18:14.114358+05:30\"\n        }\n    ]\n}"
 				}
 			]
 		},
@@ -709,7 +784,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"order_id\": 1,\n    \"status\": \"Completed\"\n}",
+					"raw": "{\n    \"order_id\": 1,\n    \"status\": \"Cancelled\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -731,102 +806,6 @@
 				}
 			},
 			"response": [
-				{
-					"name": "Fail: Incorrect Order State Update",
-					"originalRequest": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"order_id\": 1,\n    \"status\": \"Completed\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/order/1/status",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"order",
-								"1",
-								"status"
-							]
-						}
-					},
-					"status": "Unprocessable Entity",
-					"code": 422,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Date",
-							"value": "Wed, 17 May 2023 11:37:56 GMT"
-						},
-						{
-							"key": "Content-Length",
-							"value": "143"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"order updation invalid for order with id: 1, current_state: Placed, requested_state: Completed\",\n    \"data\": null\n}"
-				},
-				{
-					"name": "Fail: Invalid Order status",
-					"originalRequest": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"order_id\": 1,\n    \"status\": \"test\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/order/1/status",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"order",
-								"1",
-								"status"
-							]
-						}
-					},
-					"status": "Unprocessable Entity",
-					"code": 422,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "Content-Type",
-							"value": "application/json"
-						},
-						{
-							"key": "Date",
-							"value": "Wed, 17 May 2023 11:39:10 GMT"
-						},
-						{
-							"key": "Content-Length",
-							"value": "84"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"invalid status for order with id: 1\",\n    \"data\": null\n}"
-				},
 				{
 					"name": "Success: Dispatched",
 					"originalRequest": {
@@ -922,6 +901,102 @@
 					],
 					"cookie": [],
 					"body": "{\n    \"error_code\": 0,\n    \"error_message\": \"\",\n    \"data\": {\n        \"id\": 1,\n        \"amount\": 26000,\n        \"discount_percent\": 0,\n        \"final_amount\": 26000,\n        \"status\": \"Cancelled\",\n        \"dispatched_at\": \"2023-05-17T17:09:48.058153+05:30\",\n        \"created_at\": \"2023-05-17T17:00:51.863396+05:30\",\n        \"updated_at\": \"2023-05-17T17:10:13.513423+05:30\"\n    }\n}"
+				},
+				{
+					"name": "Fail: Invalid Order status",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1,\n    \"status\": \"test\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/order/1/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"1",
+								"status"
+							]
+						}
+					},
+					"status": "Unprocessable Entity",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 17 May 2023 11:39:10 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "84"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"invalid status for order with id: 1\",\n    \"data\": null\n}"
+				},
+				{
+					"name": "Fail: Incorrect Order State Update",
+					"originalRequest": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"order_id\": 1,\n    \"status\": \"Completed\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/order/1/status",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"order",
+								"1",
+								"status"
+							]
+						}
+					},
+					"status": "Unprocessable Entity",
+					"code": 422,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Date",
+							"value": "Wed, 17 May 2023 11:37:56 GMT"
+						},
+						{
+							"key": "Content-Length",
+							"value": "143"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"error_code\": 422,\n    \"error_message\": \"order updation invalid for order with id: 1, current_state: Placed, requested_state: Completed\",\n    \"data\": null\n}"
 				},
 				{
 					"name": "Fail: Order Already Cancelled",

@@ -28,8 +28,8 @@ PS: Also added a Returned order status
 
 ## Setup
 
-This Project uses sqlite database and gorm to handle database queries.
-There are 9 products already seeded into database and whatever updations you make to database will persist until cleanup
+This Project uses key-value store BoltDB and storm toolkit to handle database queries.
+There are 10 products already seeded into database and whatever updations you make to database will persist until cleanup
 
 
 1. Run following command to start e-commerce Application
@@ -71,16 +71,16 @@ make clean
 ├── Go-E-Commerce.postman_collection.json
 ├── Makefile
 ├── README.md
-├── cmd     #Application Entrypoint
+├── cmd
 │   └── main.go
 ├── go.mod
 ├── go.sum
-└── internal    #Application Code
-    ├── api     #Handlers & Router
+└── internal
+    ├── api
     │   ├── order.go
     │   ├── product.go
     │   └── router.go
-    ├── app     #Business Layer(Service Implementation)
+    ├── app
     │   ├── dependencies.go
     │   ├── order
     │   │   ├── domain.go
@@ -93,7 +93,7 @@ make clean
     │       │   └── Service.go
     │       ├── service.go
     │       └── service_test.go
-    ├── pkg     #Packages shared by application code
+    ├── pkg
     │   ├── apperrors
     │   │   ├── errors.go
     │   │   ├── map_errors.go
@@ -108,7 +108,12 @@ make clean
     │   │   └── logger.go
     │   └── middleware
     │       └── response_writer.go
-    └── repository  #Database Layer
+    └── repository
+        ├── boltdb
+        │   ├── base.go
+        │   ├── order.go
+        │   ├── order_items.go
+        │   └── product.go
         ├── init.go
         ├── mocks
         │   ├── OrderItemStorer.go
@@ -116,6 +121,6 @@ make clean
         │   └── ProductStorer.go
         ├── order.go
         ├── order_items.go
-        ├── product.go
+        ├── products.go
         └── repo.go
 ```

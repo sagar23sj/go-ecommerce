@@ -4,7 +4,7 @@ import (
 	"github.com/asdine/storm/v3"
 	"github.com/sagar23sj/go-ecommerce/internal/app/order"
 	"github.com/sagar23sj/go-ecommerce/internal/app/product"
-	"github.com/sagar23sj/go-ecommerce/internal/repository"
+	repository "github.com/sagar23sj/go-ecommerce/internal/repository/boltdb"
 )
 
 type Dependencies struct {
