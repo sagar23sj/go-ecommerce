@@ -18,9 +18,23 @@ func InitializeDatabase() (db *storm.DB, err error) {
 	}
 
 	//migrate database tables
-	db.Init(&Order{})
-	db.Init(&Product{})
-	db.Init(&OrderItem{})
+	err = db.Init(&Order{})
+	if err != nil {
+		log.Printf("error occured migrating order bucket: %v", err.Error())
+		return nil, err
+	}
+
+	err = db.Init(&Product{})
+	if err != nil {
+		log.Printf("error occured migrating product bucket: %v", err.Error())
+		return nil, err
+	}
+
+	err = db.Init(&OrderItem{})
+	if err != nil {
+		log.Printf("error occured migrating order_items bucket: %v", err.Error())
+		return nil, err
+	}
 
 	//seed products in database
 	err = seedDatabase(db)

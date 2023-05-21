@@ -4,8 +4,6 @@
 name: Build and Test E-Commerce Application
 
 on:
-  push:
-    branches: [ "**" ]
   pull_request:
     branches: [ "main" ]
 
