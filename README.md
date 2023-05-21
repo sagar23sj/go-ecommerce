@@ -1,5 +1,7 @@
 # Go E-Commerce Project
 
+[![codecov](https://codecov.io/gh/sagar23sj/go-ecommerce/branch/main/graph/badge.svg?token=NKLOFENXKD)](https://codecov.io/gh/sagar23sj/go-ecommerce)
+
 ## Problem Statement
 
 <p>
