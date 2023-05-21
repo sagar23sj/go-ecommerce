@@ -33,6 +33,17 @@ jobs:
     - name: Run Test Cases
       run: make test
 
+    # Generate Test Coverage of the Code
+    - name: Generate Test Coverage
+      run: |
+        go test -v ./... -covermode=count -coverprofile=coverage.out
+        go tool cover -func=coverage.out -o=coverage.out
+
+    # Add Code Coverage Tag on repository
+    - name: Go Coverage Badge  
+      uses: tj-actions/coverage-badge-go@v2
+      with:
+        filename: coverage.out
 
     # Run go vet on the code
     - name: Check go vet
