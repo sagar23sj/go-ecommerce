@@ -56,7 +56,7 @@ func (os *orderStore) UpdateOrderStatus(ctx context.Context, tx repository.Trans
 
 func (os *orderStore) UpdateOrderDispatchDate(ctx context.Context, tx repository.Transaction, orderID int64, dispatchedAt time.Time) error {
 	queryExecutor := os.initiateQueryExecutor(tx)
-	err := queryExecutor.Update(&repository.Order{ID: uint(orderID), DispatchedAt: os.TimeNow(), UpdatedAt: os.TimeNow()})
+	err := queryExecutor.Update(&repository.Order{ID: uint(orderID), DispatchedAt: dispatchedAt, UpdatedAt: os.TimeNow()})
 	if err != nil {
 		return err
 	}

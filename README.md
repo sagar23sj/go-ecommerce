@@ -48,6 +48,8 @@ make test
 3. Run following command to check test coverage
 ```bash
 make test-cover
+
+#you can also check code test coverage on top. Click on codeccov badge to check more about test coverage
 ```
 
 4. Run following command to erase database to start fresh
