@@ -35,6 +35,12 @@ This Project uses key-value store BoltDB and storm toolkit to handle database qu
 There are 10 products already seeded into database and whatever updations you make on database, it will persist even after you close the application. You can run the CleanUp command to start fresh.
 
 
+Firstly, run the following command to download all dependencies
+```bash
+go mod download
+```
+
+
 1. Run following command to start e-commerce Application
 ```bash
 make run
