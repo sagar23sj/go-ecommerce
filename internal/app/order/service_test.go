@@ -6,8 +6,8 @@ import (
 	"time"
 
 	productMock "github.com/sagar23sj/go-ecommerce/internal/app/product/mocks"
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
+	"github.com/sagar23sj/go-ecommerce/internal/apperrors"
+	"github.com/sagar23sj/go-ecommerce/internal/model"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 	"github.com/sagar23sj/go-ecommerce/internal/repository/mocks"
 	"github.com/stretchr/testify/mock"
@@ -46,17 +46,17 @@ func (suite *OrderServiceTestSuite) TearDownTest() {
 func (suite *OrderServiceTestSuite) TestCreateOrder() {
 	type testCaseStruct struct {
 		name           string
-		input          dto.CreateOrderRequest
+		input          model.CreateOrderRequest
 		setup          func()
-		expectedOutput dto.Order
+		expectedOutput model.Order
 		expectedErr    error
 	}
 
 	testCases := []testCaseStruct{
 		{
 			name: "Success",
-			input: dto.CreateOrderRequest{
-				Products: []dto.ProductInfo{
+			input: model.CreateOrderRequest{
+				Products: []model.ProductInfo{
 					{
 						ProductID: int64(1),
 						Quantity:  int64(2),
@@ -67,7 +67,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				tx := &gorm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, nil).Return(nil)
-				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(model.Product{
 					ID:       int64(1),
 					Name:     "xyz",
 					Price:    10.0,
@@ -93,9 +93,9 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				}}).Return(nil)
 				suite.productService.On("UpdateProductQuantity", mock.Anything, tx, map[int64]int64{1: 8}).Return(nil)
 			},
-			expectedOutput: dto.Order{
+			expectedOutput: model.Order{
 				ID:                 int64(1),
-				Products:           []dto.ProductInfo{{ProductID: 1, Quantity: 2}},
+				Products:           []model.ProductInfo{{ProductID: 1, Quantity: 2}},
 				Amount:             20.0,
 				DiscountPercentage: 0.0,
 				FinalAmount:        20.0,
@@ -105,8 +105,8 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 		},
 		{
 			name: "Success for 3 Premium Products",
-			input: dto.CreateOrderRequest{
-				Products: []dto.ProductInfo{
+			input: model.CreateOrderRequest{
+				Products: []model.ProductInfo{
 					{
 						ProductID: int64(1),
 						Quantity:  int64(2),
@@ -125,21 +125,21 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				tx := &gorm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, nil).Return(nil)
-				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(model.Product{
 					ID:       int64(1),
 					Name:     "xyz",
 					Price:    10.0,
 					Category: "Premium",
 					Quantity: int64(10),
 				}, nil).Once()
-				suite.productService.On("GetProductByID", mock.Anything, tx, int64(2)).Return(dto.Product{
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(2)).Return(model.Product{
 					ID:       int64(2),
 					Name:     "xyz",
 					Price:    20.0,
 					Category: "Premium",
 					Quantity: int64(10),
 				}, nil).Once()
-				suite.productService.On("GetProductByID", mock.Anything, tx, int64(3)).Return(dto.Product{
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(3)).Return(model.Product{
 					ID:       int64(3),
 					Name:     "xyz",
 					Price:    30.0,
@@ -177,9 +177,9 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				}).Return(nil)
 				suite.productService.On("UpdateProductQuantity", mock.Anything, tx, map[int64]int64{1: 8, 2: 8, 3: 8}).Return(nil)
 			},
-			expectedOutput: dto.Order{
+			expectedOutput: model.Order{
 				ID:                 int64(1),
-				Products:           []dto.ProductInfo{{ProductID: 1, Quantity: 2}},
+				Products:           []model.ProductInfo{{ProductID: 1, Quantity: 2}},
 				Amount:             120.0,
 				DiscountPercentage: 10.0,
 				FinalAmount:        108.0,
@@ -189,8 +189,8 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 		},
 		{
 			name: "Failed Because Product Limit Exceeded",
-			input: dto.CreateOrderRequest{
-				Products: []dto.ProductInfo{
+			input: model.CreateOrderRequest{
+				Products: []model.ProductInfo{
 					{
 						ProductID: int64(1),
 						Quantity:  int64(12),
@@ -201,7 +201,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				tx := &gorm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
-				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(model.Product{
 					ID:       int64(1),
 					Name:     "xyz",
 					Price:    10.0,
@@ -209,7 +209,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 					Quantity: int64(20),
 				}, nil)
 			},
-			expectedOutput: dto.Order{},
+			expectedOutput: model.Order{},
 			expectedErr: apperrors.ProductQuantityExceeded{
 				ID:            1,
 				QuantityLimit: 10,
@@ -218,8 +218,8 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 		},
 		{
 			name: "Fail Because Product Quantity Insufficient",
-			input: dto.CreateOrderRequest{
-				Products: []dto.ProductInfo{
+			input: model.CreateOrderRequest{
+				Products: []model.ProductInfo{
 					{
 						ProductID: int64(1),
 						Quantity:  int64(8),
@@ -230,7 +230,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 				tx := &gorm.DB{}
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
-				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(dto.Product{
+				suite.productService.On("GetProductByID", mock.Anything, tx, int64(1)).Return(model.Product{
 					ID:       int64(1),
 					Name:     "xyz",
 					Price:    10.0,
@@ -238,7 +238,7 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 					Quantity: int64(6),
 				}, nil)
 			},
-			expectedOutput: dto.Order{},
+			expectedOutput: model.Order{},
 			expectedErr: apperrors.ProductQuantityInsufficient{
 				ID:                1,
 				QuantityRemaining: 6,
@@ -266,9 +266,9 @@ func (suite *OrderServiceTestSuite) TestCreateOrder() {
 func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 	type testCaseStruct struct {
 		name           string
-		input          dto.UpdateOrderStatusRequest
+		input          model.UpdateOrderStatusRequest
 		setup          func()
-		expectedOutput dto.Order
+		expectedOutput model.Order
 		expectedErr    error
 	}
 
@@ -277,7 +277,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 	testCases := []testCaseStruct{
 		{
 			name: "Success",
-			input: dto.UpdateOrderStatusRequest{
+			input: model.UpdateOrderStatusRequest{
 				OrderID: 1,
 				Status:  "Dispatched",
 			},
@@ -303,9 +303,9 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 					DispatchedAt:       timeNow,
 				}, nil).NotBefore()
 			},
-			expectedOutput: dto.Order{
+			expectedOutput: model.Order{
 				ID:                 int64(1),
-				Products:           []dto.ProductInfo{},
+				Products:           []model.ProductInfo{},
 				Amount:             20.0,
 				DiscountPercentage: 0.0,
 				FinalAmount:        20.0,
@@ -315,7 +315,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 		},
 		{
 			name: "Failed Because Order Status Invalid ",
-			input: dto.UpdateOrderStatusRequest{
+			input: model.UpdateOrderStatusRequest{
 				OrderID: int64(1),
 				Status:  "test",
 			},
@@ -324,12 +324,12 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 				suite.orderRepo.On("BeginTx", mock.Anything).Return(tx, nil)
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
 			},
-			expectedOutput: dto.Order{},
+			expectedOutput: model.Order{},
 			expectedErr:    apperrors.OrderStatusInvalid{ID: int64(1)},
 		},
 		{
 			name: "Failed Because Order Updation Invalid ",
-			input: dto.UpdateOrderStatusRequest{
+			input: model.UpdateOrderStatusRequest{
 				OrderID: int64(1),
 				Status:  "Completed",
 			},
@@ -345,7 +345,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 					Status:             "Placed",
 				}, nil)
 			},
-			expectedOutput: dto.Order{},
+			expectedOutput: model.Order{},
 			expectedErr: apperrors.OrderUpdationInvalid{
 				ID:             int64(1),
 				CurrentState:   "Placed",
@@ -354,7 +354,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 		},
 		{
 			name: "Failed Because Order Not Found ",
-			input: dto.UpdateOrderStatusRequest{
+			input: model.UpdateOrderStatusRequest{
 				OrderID: int64(1),
 				Status:  "Completed",
 			},
@@ -364,7 +364,7 @@ func (suite *OrderServiceTestSuite) TestUpdateOrderStatus() {
 				suite.orderRepo.On("HandleTransaction", mock.Anything, tx, mock.Anything).Return(nil)
 				suite.orderRepo.On("GetOrderByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Order{}, nil)
 			},
-			expectedOutput: dto.Order{},
+			expectedOutput: model.Order{},
 			expectedErr:    apperrors.OrderNotFound{ID: int64(1)},
 		},
 	}

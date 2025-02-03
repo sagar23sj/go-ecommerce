@@ -3,8 +3,8 @@ package product
 import (
 	"context"
 
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
+	"github.com/sagar23sj/go-ecommerce/internal/apperrors"
+	"github.com/sagar23sj/go-ecommerce/internal/model"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 	"gorm.io/gorm"
 )
@@ -14,8 +14,8 @@ type service struct {
 }
 
 type Service interface {
-	GetProductByID(ctx context.Context, tx *gorm.DB, productID int64) (dto.Product, error)
-	ListProducts(ctx context.Context) ([]dto.Product, error)
+	GetProductByID(ctx context.Context, tx *gorm.DB, productID int64) (model.Product, error)
+	ListProducts(ctx context.Context) ([]model.Product, error)
 	UpdateProductQuantity(ctx context.Context, tx *gorm.DB, productsQuantityMap map[int64]int64) error
 }
 
@@ -25,22 +25,22 @@ func NewService(productRepo repository.ProductStorer) Service {
 	}
 }
 
-func (ps *service) GetProductByID(ctx context.Context, tx *gorm.DB, productID int64) (dto.Product, error) {
+func (ps *service) GetProductByID(ctx context.Context, tx *gorm.DB, productID int64) (model.Product, error) {
 	productInfoDB, err := ps.productRepo.GetProductByID(ctx, tx, productID)
 	if err != nil {
-		return dto.Product{}, nil
+		return model.Product{}, nil
 	}
 
 	if productInfoDB.ID == 0 {
-		return dto.Product{}, apperrors.ProductNotFound{ID: productID}
+		return model.Product{}, apperrors.ProductNotFound{ID: productID}
 	}
 
 	productInfo := MapRepoObjectToDto(productInfoDB)
 	return productInfo, nil
 }
 
-func (ps *service) ListProducts(ctx context.Context) ([]dto.Product, error) {
-	products := make([]dto.Product, 0)
+func (ps *service) ListProducts(ctx context.Context) ([]model.Product, error) {
+	products := make([]model.Product, 0)
 
 	productsListDB, err := ps.productRepo.ListProducts(ctx, nil)
 	if err != nil {

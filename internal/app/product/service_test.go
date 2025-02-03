@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
+	"github.com/sagar23sj/go-ecommerce/internal/apperrors"
+	"github.com/sagar23sj/go-ecommerce/internal/model"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 	"github.com/sagar23sj/go-ecommerce/internal/repository/mocks"
 	"github.com/stretchr/testify/mock"
@@ -41,7 +41,7 @@ func (suite *ProductServiceTestSuite) TestGetProductByID() {
 		name           string
 		input          int64
 		setup          func()
-		expectedOutput dto.Product
+		expectedOutput model.Product
 		expectedErr    error
 	}{
 		{
@@ -56,7 +56,7 @@ func (suite *ProductServiceTestSuite) TestGetProductByID() {
 					Quantity: 10,
 				}, nil)
 			},
-			expectedOutput: dto.Product{
+			expectedOutput: model.Product{
 				ID:       1,
 				Name:     "XYZ",
 				Category: "Premium",
@@ -71,7 +71,7 @@ func (suite *ProductServiceTestSuite) TestGetProductByID() {
 			setup: func() {
 				suite.productRepo.On("GetProductByID", mock.Anything, mock.Anything, int64(1)).Return(repository.Product{}, nil)
 			},
-			expectedOutput: dto.Product{},
+			expectedOutput: model.Product{},
 			expectedErr:    apperrors.ProductNotFound{ID: 1},
 		},
 	}
@@ -98,7 +98,7 @@ func (suite *ProductServiceTestSuite) TestListProducts() {
 	testCases := []struct {
 		name           string
 		setup          func()
-		expectedOutput []dto.Product
+		expectedOutput []model.Product
 		expectedErr    error
 	}{
 		{
@@ -113,7 +113,7 @@ func (suite *ProductServiceTestSuite) TestListProducts() {
 				},
 				}, nil)
 			},
-			expectedOutput: []dto.Product{{
+			expectedOutput: []model.Product{{
 				ID:       1,
 				Name:     "XYZ",
 				Category: "Premium",
@@ -127,7 +127,7 @@ func (suite *ProductServiceTestSuite) TestListProducts() {
 			setup: func() {
 				suite.productRepo.On("ListProducts", mock.Anything, mock.Anything).Return([]repository.Product{}, errors.New("Something went wrong in db"))
 			},
-			expectedOutput: []dto.Product{},
+			expectedOutput: []model.Product{},
 			expectedErr:    errors.New("Something went wrong in db"),
 		},
 	}

@@ -3,7 +3,7 @@ package order
 import (
 	"time"
 
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
+	"github.com/sagar23sj/go-ecommerce/internal/model"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 )
 
@@ -68,11 +68,11 @@ func validateUpdateOrderStatusRequest(RequestOrderStatus, DBOrderStatus string) 
 	return true
 }
 
-func MapOrderRepoToOrderDto(order repository.Order, orderItems ...repository.OrderItem) dto.Order {
+func MapOrderRepoToOrderDto(order repository.Order, orderItems ...repository.OrderItem) model.Order {
 
-	productInfo := make([]dto.ProductInfo, 0)
+	productInfo := make([]model.ProductInfo, 0)
 	for _, orderItem := range orderItems {
-		productInfo = append(productInfo, dto.ProductInfo{
+		productInfo = append(productInfo, model.ProductInfo{
 			ProductID: orderItem.ProductID,
 			Quantity:  orderItem.Quantity,
 		})
@@ -83,7 +83,7 @@ func MapOrderRepoToOrderDto(order repository.Order, orderItems ...repository.Ord
 		dispatchedAt = nil
 	}
 
-	return dto.Order{
+	return model.Order{
 		ID:                 int64(order.ID),
 		Products:           productInfo,
 		Amount:             order.Amount,

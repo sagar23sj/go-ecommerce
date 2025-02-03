@@ -71,51 +71,46 @@ make clean
 ├── Go-E-Commerce.postman_collection.json
 ├── Makefile
 ├── README.md
-├── cmd     #Application Entrypoint
+├── cmd
 │   └── main.go
 ├── go.mod
 ├── go.sum
-└── internal    #Application Code
-    ├── api     #Handlers & Router
-    │   ├── order.go
-    │   ├── product.go
-    │   └── router.go
-    ├── app     #Business Layer(Service Implementation)
-    │   ├── dependencies.go
-    │   ├── order
-    │   │   ├── domain.go
-    │   │   ├── domain_test.go
-    │   │   ├── service.go
-    │   │   └── service_test.go
-    │   └── product
-    │       ├── domain.go
-    │       ├── mocks
-    │       │   └── Service.go
-    │       ├── service.go
-    │       └── service_test.go
-    ├── pkg     #Packages shared by application code
-    │   ├── apperrors
-    │   │   ├── errors.go
-    │   │   ├── map_errors.go
-    │   │   ├── order.go
-    │   │   └── product.go
-    │   ├── constants
-    │   │   └── app.go
-    │   ├── dto
-    │   │   ├── order.go
-    │   │   └── product.go
-    │   ├── logger
-    │   │   └── logger.go
-    │   └── middleware
-    │       └── response_writer.go
-    └── repository  #Database Layer
-        ├── init.go
-        ├── mocks
-        │   ├── OrderItemStorer.go
-        │   ├── OrderStorer.go
-        │   └── ProductStorer.go
-        ├── order.go
-        ├── order_items.go
-        ├── product.go
-        └── repo.go
+├── internal
+│   ├── app
+│   │   ├── dependencies.go
+│   │   ├── order
+│   │   │   ├── domain.go
+│   │   │   ├── domain_test.go
+│   │   │   ├── handler.go
+│   │   │   ├── service.go
+│   │   │   └── service_test.go
+│   │   ├── product
+│   │   │   ├── domain.go
+│   │   │   ├── handler.go
+│   │   │   ├── mocks
+│   │   │   │   └── Service.go
+│   │   │   ├── service.go
+│   │   │   └── service_test.go
+│   │   └── router.go
+│   ├── apperrors
+│   │   ├── errors.go
+│   │   ├── map_errors.go
+│   │   ├── order.go
+│   │   └── product.go
+│   ├── model
+│   │   ├── order.go
+│   │   └── product.go
+│   ├── repository
+│   │   ├── init.go
+│   │   ├── mocks
+│   │   │   ├── OrderItemStorer.go
+│   │   │   ├── OrderStorer.go
+│   │   │   └── ProductStorer.go
+│   │   ├── order.go
+│   │   ├── order_items.go
+│   │   ├── product.go
+│   │   └── repo.go
+│   └── utils
+│       └── http_response.go
+└── test.db
 ```

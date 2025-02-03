@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/sagar23sj/go-ecommerce/internal/app/product"
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/apperrors"
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
+	"github.com/sagar23sj/go-ecommerce/internal/apperrors"
+	"github.com/sagar23sj/go-ecommerce/internal/model"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 	"gorm.io/gorm"
 )
@@ -21,10 +21,10 @@ type service struct {
 }
 
 type Service interface {
-	CreateOrder(ctx context.Context, orderDetails dto.CreateOrderRequest) (dto.Order, error)
-	GetOrderDetailsByID(ctx context.Context, orderID int64) (dto.Order, error)
-	ListOrders(ctx context.Context) ([]dto.Order, error)
-	UpdateOrderStatus(ctx context.Context, orderID int64, status string) (dto.Order, error)
+	CreateOrder(ctx context.Context, orderDetails model.CreateOrderRequest) (model.Order, error)
+	GetOrderDetailsByID(ctx context.Context, orderID int64) (model.Order, error)
+	ListOrders(ctx context.Context) ([]model.Order, error)
+	UpdateOrderStatus(ctx context.Context, orderID int64, status string) (model.Order, error)
 }
 
 func NewService(orderRepo repository.OrderStorer, orderItemsRepo repository.OrderItemStorer,
@@ -36,11 +36,11 @@ func NewService(orderRepo repository.OrderStorer, orderItemsRepo repository.Orde
 	}
 }
 
-func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrderRequest) (order dto.Order, err error) {
+func (os *service) CreateOrder(ctx context.Context, orderDetails model.CreateOrderRequest) (order model.Order, err error) {
 	//initializing database transaction
 	tx, err := os.orderRepo.BeginTx(ctx)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	defer func() {
@@ -53,7 +53,7 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 
 	orderRepoObj, updatedProductInfo, err := os.calculateOrderValueFromProducts(ctx, tx, orderDetails.Products)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	//Set Order Status to Placed
@@ -62,7 +62,7 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 	//1. Inserting Order in Database
 	orderDB, err := os.orderRepo.CreateOrder(ctx, tx, orderRepoObj)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	orderItems := make([]repository.OrderItem, 0)
@@ -77,7 +77,7 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 	//2. Inserting order items in database
 	err = os.orderItemsRepo.StoreOrderItems(ctx, tx, orderItems)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	//3. Update Product quantity in database
@@ -88,34 +88,34 @@ func (os *service) CreateOrder(ctx context.Context, orderDetails dto.CreateOrder
 
 	err = os.productSvc.UpdateProductQuantity(ctx, tx, productQuantityMap)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	order = MapOrderRepoToOrderDto(orderDB, orderItems...)
 	return order, nil
 }
 
-func (os *service) GetOrderDetailsByID(ctx context.Context, orderID int64) (order dto.Order, err error) {
+func (os *service) GetOrderDetailsByID(ctx context.Context, orderID int64) (order model.Order, err error) {
 	orderInfoDB, err := os.orderRepo.GetOrderByID(ctx, nil, orderID)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	if orderInfoDB.ID == 0 {
-		return dto.Order{}, apperrors.OrderNotFound{ID: orderID}
+		return model.Order{}, apperrors.OrderNotFound{ID: orderID}
 	}
 
 	orderItemsDB, err := os.orderItemsRepo.GetOrderItemsByOrderID(ctx, nil, orderID)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	order = MapOrderRepoToOrderDto(orderInfoDB, orderItemsDB...)
 	return order, nil
 }
 
-func (os *service) ListOrders(ctx context.Context) ([]dto.Order, error) {
-	orderList := make([]dto.Order, 0)
+func (os *service) ListOrders(ctx context.Context) ([]model.Order, error) {
+	orderList := make([]model.Order, 0)
 
 	orderListDB, err := os.orderRepo.ListOrders(ctx, nil)
 	if err != nil {
@@ -129,11 +129,11 @@ func (os *service) ListOrders(ctx context.Context) ([]dto.Order, error) {
 	return orderList, nil
 }
 
-func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status string) (order dto.Order, err error) {
+func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status string) (order model.Order, err error) {
 	//initializing database transaction
 	tx, err := os.orderRepo.BeginTx(ctx)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	defer func() {
@@ -146,23 +146,23 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 
 	//order status invalid, return error OrderStatusInvalid
 	if _, ok := MapOrderStatus[status]; !ok {
-		return dto.Order{}, apperrors.OrderStatusInvalid{ID: orderID}
+		return model.Order{}, apperrors.OrderStatusInvalid{ID: orderID}
 	}
 
 	orderInfoDB, err := os.orderRepo.GetOrderByID(ctx, tx, orderID)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	//order not found invalid, return error OrderNotFound
 	if orderInfoDB.ID == 0 {
-		return dto.Order{}, apperrors.OrderNotFound{ID: orderID}
+		return model.Order{}, apperrors.OrderNotFound{ID: orderID}
 	}
 
 	//order status not allowed for update, return error OrderUpdationInvalid
 	isUpdationValid := validateUpdateOrderStatusRequest(status, orderInfoDB.Status)
 	if !isUpdationValid {
-		return dto.Order{}, apperrors.OrderUpdationInvalid{
+		return model.Order{}, apperrors.OrderUpdationInvalid{
 			ID:             orderID,
 			CurrentState:   orderInfoDB.Status,
 			RequestedState: status,
@@ -172,7 +172,7 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 	//update order status in db
 	err = os.orderRepo.UpdateOrderStatus(ctx, tx, orderID, status)
 	if err != nil {
-		return dto.Order{}, fmt.Errorf("error occured while updating order status: %w", err)
+		return model.Order{}, fmt.Errorf("error occured while updating order status: %w", err)
 	}
 
 	//update product quantity if order cancelled or returned
@@ -180,7 +180,7 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 
 		orderItemsDB, err := os.orderItemsRepo.GetOrderItemsByOrderID(ctx, tx, orderID)
 		if err != nil {
-			return dto.Order{}, fmt.Errorf("error occured while fetching order items: %w", err)
+			return model.Order{}, fmt.Errorf("error occured while fetching order items: %w", err)
 		}
 
 		productQuantityMap := make(map[int64]int64)
@@ -188,7 +188,7 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 
 			product, err := os.productSvc.GetProductByID(ctx, tx, item.ProductID)
 			if err != nil {
-				return dto.Order{}, fmt.Errorf("error occured while fetching product with id %d,  %w", item.ProductID, err)
+				return model.Order{}, fmt.Errorf("error occured while fetching product with id %d,  %w", item.ProductID, err)
 			}
 
 			productQuantityMap[item.ProductID] = product.Quantity + item.Quantity
@@ -196,7 +196,7 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 
 		err = os.productSvc.UpdateProductQuantity(ctx, tx, productQuantityMap)
 		if err != nil {
-			return dto.Order{}, fmt.Errorf("error occured while updating product quantiry,  %w", err)
+			return model.Order{}, fmt.Errorf("error occured while updating product quantiry,  %w", err)
 		}
 
 	}
@@ -206,23 +206,23 @@ func (os *service) UpdateOrderStatus(ctx context.Context, orderID int64, status 
 		orderDispatchedAt := now()
 		err = os.orderRepo.UpdateOrderDispatchDate(ctx, tx, orderID, orderDispatchedAt)
 		if err != nil {
-			return dto.Order{}, fmt.Errorf("error occured while updating order dispatch date: %w", err)
+			return model.Order{}, fmt.Errorf("error occured while updating order dispatch date: %w", err)
 		}
 	}
 
 	orderInfoDB, err = os.orderRepo.GetOrderByID(ctx, tx, orderID)
 	if err != nil {
-		return dto.Order{}, err
+		return model.Order{}, err
 	}
 
 	order = MapOrderRepoToOrderDto(orderInfoDB)
 	return order, err
 }
 
-func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm.DB, requestedProducts []dto.ProductInfo) (
-	orderInfo repository.Order, productsUpdated []dto.ProductInfo, err error) {
+func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm.DB, requestedProducts []model.ProductInfo) (
+	orderInfo repository.Order, productsUpdated []model.ProductInfo, err error) {
 
-	productsUpdated = make([]dto.ProductInfo, 0)
+	productsUpdated = make([]model.ProductInfo, 0)
 	premiumProductCount := 0
 
 	var orderAmount float64
@@ -261,7 +261,7 @@ func (os *service) calculateOrderValueFromProducts(ctx context.Context, tx *gorm
 		}
 
 		//adding product details with updated quantity to the list
-		productsUpdated = append(productsUpdated, dto.ProductInfo{
+		productsUpdated = append(productsUpdated, model.ProductInfo{
 			ProductID: p.ProductID,
 			Quantity:  (productInfo.Quantity - p.Quantity),
 		})

@@ -1,7 +1,7 @@
 package product
 
 import (
-	"github.com/sagar23sj/go-ecommerce/internal/pkg/dto"
+	"github.com/sagar23sj/go-ecommerce/internal/model"
 	"github.com/sagar23sj/go-ecommerce/internal/repository"
 )
 
@@ -13,8 +13,8 @@ const (
 	BudgetProduct  ProductType = "Budget"
 )
 
-func MapRepoObjectToDto(repoObj repository.Product) dto.Product {
-	return dto.Product{
+func MapRepoObjectToDto(repoObj repository.Product) model.Product {
+	return model.Product{
 		ID:        int64(repoObj.ID),
 		Name:      repoObj.Name,
 		Price:     repoObj.Price,
@@ -25,7 +25,7 @@ func MapRepoObjectToDto(repoObj repository.Product) dto.Product {
 	}
 }
 
-func MapDtoObjectToRepo(product dto.Product) repository.Product {
+func MapDtoObjectToRepo(product model.Product) repository.Product {
 	return repository.Product{
 		Name:     product.Name,
 		Price:    product.Price,
